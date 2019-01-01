@@ -1,0 +1,50 @@
+# compiled output
+**/dist
+**/tmp
+**/out-tsc
+
+# dependencies
+**/node_modules
+
+# IDEs and editors
+**/.project
+**/.classpath
+**/.c9/
+**/*.launch
+**/.settings/
+**/*.sublime-workspace
+**/target
+**/*iml
+**/.idea
+
+# IDE - VSCode
+**/!.vscode/settings.json
+**/!.vscode/tasks.json
+**/!.vscode/launch.json
+**/!.vscode/extensions.json
+
+# misc
+**/.sass-cache
+**/connect.lock
+**/libpeerconnection.log
+**/npm-debug.log
+**/testem.log
+**/typings
+
+# e2e
+**/e2e/*.js
+**/e2e/*.map
+
+# System Files
+**/.DS_Store
+**/Thumbs.db
+
+# Builded files
+docker/**/*.txt
+docker/**/*.ico
+docker/**/*.html
+docker/**/*.js
+docker/**/*.css
+docker/**/*.jar
+
+package-lock.json
