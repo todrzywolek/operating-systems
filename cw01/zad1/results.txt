@@ -1,0 +1,50 @@
+Ackermann results
+NO OPTIMIZATION
+  real:    24.94
+  user:    24.93
+  sys:      0.00
+  child user:     0.00
+  child sys:      0.00
+O1 OPTIMIZATION
+  real:    11.95
+  user:    11.94
+  sys:      0.00
+  child user:     0.00
+  child sys:      0.00
+nO2 OPTIMIZATION
+  real:     9.53
+  user:     9.53
+  sys:      0.00
+  child user:     0.00
+  child sys:      0.00
+nO3 OPTIMIZATION
+  real:     7.24
+  user:     7.22
+  sys:      0.00
+  child user:     0.00
+  child sys:      0.00
+nnFile read/write results
+nNO OPTIMIZATION
+  real:    48.16
+  user:     0.90
+  sys:     13.47
+  child user:     0.00
+  child sys:      0.00
+nO1 OPTIMIZATION
+  real:    50.84
+  user:     0.88
+  sys:     13.69
+  child user:     0.00
+  child sys:      0.00
+nO2 OPTIMIZATION
+  real:    51.78
+  user:     0.81
+  sys:     14.00
+  child user:     0.00
+  child sys:      0.00
+nO3 OPTIMIZATION
+  real:    50.68
+  user:     0.88
+  sys:     13.62
+  child user:     0.00
+  child sys:      0.00
