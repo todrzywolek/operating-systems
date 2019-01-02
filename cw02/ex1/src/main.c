@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "generate.h"
 
 void validate_operation_and_argument_number(int number_of_arguments, char const *operation);
 void run_operation(char const *argv[]);
@@ -39,6 +40,7 @@ void run_operation(char const *argv[])
     if (strcmp(operation, "generate") == 0)
     {
         printf("running generate\n");
+        generate(argv);
     }
     else if (strcmp(operation, "sort") == 0)
     {
