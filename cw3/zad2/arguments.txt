@@ -1,0 +1,4 @@
+ls -l
+ps aux
+ls -ali
+pwd
