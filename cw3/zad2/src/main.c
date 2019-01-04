@@ -13,8 +13,7 @@ struct Command
 
 void validate_arguments_number(int number_of_arguments);
 FILE *open_input_file(char const *filename);
-void read_line(char *line);
-void read_line_2(char *line, struct Command *command);
+void read_line(char *line, struct Command *command);
 int execute_in_separate_process(struct Command *command);
 void err_sys(const char *x);
 
@@ -29,7 +28,7 @@ int main(int argc, char const *argv[])
     int execution_result = 0, line_number = 1;
     while (fgets(line, sizeof(line), fp) != NULL)
     {
-        read_line_2(line, &command);
+        read_line(line, &command);
         execution_result = execute_in_separate_process(&command);
         if (execution_result < 0)
         {
@@ -67,7 +66,7 @@ FILE *open_input_file(char const *filename)
     return fp;
 }
 
-void read_line_2(char *line, struct Command *command)
+void read_line(char *line, struct Command *command)
 {
     char *p = strtok(line, " ");
     command->program_name = p;
