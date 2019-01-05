@@ -40,7 +40,7 @@ void produce(struct producer_params *params)
 int read_line(struct file_params *file_parameters, char *line, int *line_num)
 {
     // lock file mutex
-    //pthread_mutex_lock(&file_parameters->mutex);
+    pthread_mutex_lock(&file_parameters->mutex);
 
     char *read_result;
     // read line
@@ -50,7 +50,7 @@ int read_line(struct file_params *file_parameters, char *line, int *line_num)
     file_parameters->line_num++;
 
     // unlock file mutex
-    //pthread_mutex_unlock(&file_parameters->mutex);
+    pthread_mutex_unlock(&file_parameters->mutex);
 
     // if EOF finish processing
     if (read_result == NULL)
@@ -63,7 +63,7 @@ int read_line(struct file_params *file_parameters, char *line, int *line_num)
 void save_in_buffer(struct buffer_t *buffer, char *line, int line_num)
 {
     // lock buffer mutex
-    //pthread_mutex_lock(&buffer->mutex);
+    pthread_mutex_lock(&buffer->mutex);
 
     while (buffer->occupied >= BSIZE)
     {
@@ -83,7 +83,7 @@ void save_in_buffer(struct buffer_t *buffer, char *line, int line_num)
     pthread_cond_signal(&buffer->more);
 
     // unlock buffer mutex
-    //pthread_mutex_unlock(&buffer->mutex);
+    pthread_mutex_unlock(&buffer->mutex);
 }
 
 void perform_save(struct buffer_t *buffer, char *line, int line_length, int line_num)

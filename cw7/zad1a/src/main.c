@@ -16,7 +16,7 @@ int main(int argc, char const *argv[])
     struct file_params file_parameters;
     file_parameters.fp = fp;
     file_parameters.line_num = 1;
-    //pthread_mutex_init(&file_parameters.mutex, NULL);
+    pthread_mutex_init(&file_parameters.mutex, NULL);
 
     struct buffer_t b;
     b.nextin = 0;
@@ -25,6 +25,7 @@ int main(int argc, char const *argv[])
         b.buf[i] = NULL;
     }
     b.occupied = 0;
+    pthread_mutex_init(&b.mutex, NULL);
 
     struct producer_params producer_parameters;
     producer_parameters.file_params = &file_parameters;
