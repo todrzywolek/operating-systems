@@ -67,7 +67,7 @@ void save_in_buffer(struct buffer_t *buffer, char *line, int line_num)
 
     while (buffer->occupied >= BSIZE)
     {
-        printf("Thread: %ld - Buffer full. Waiting...\n", pthread_self());
+        //printf("Thread: %ld - Buffer full. Waiting...\n", pthread_self());
         pthread_cond_wait(&buffer->less, &buffer->mutex);
     }
 
