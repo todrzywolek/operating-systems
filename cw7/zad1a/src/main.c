@@ -15,6 +15,7 @@ int main(int argc, char const *argv[])
 
     struct file_params file_parameters;
     file_parameters.fp = fp;
+    file_parameters.line_num = 1;
     //pthread_mutex_init(&file_parameters.mutex, NULL);
 
     struct buffer_t b;
@@ -29,15 +30,15 @@ int main(int argc, char const *argv[])
     producer_parameters.buffer = &b;
 
     pthread_t thread1_id;
-    //pthread_t thread2_id;
+    pthread_t thread2_id;
 
     pthread_create(&thread1_id, NULL, &producer_start, &producer_parameters);
     printf("\nCreated thread with id=%ld\n", thread1_id);
-    //pthread_create(&thread2_id, NULL, &producer_start, &producer_parameters);
-    //printf("\nCreated thread with id=%ld\n", thread2_id);
+    pthread_create(&thread2_id, NULL, &producer_start, &producer_parameters);
+    printf("\nCreated thread with id=%ld\n", thread2_id);
 
     pthread_join(thread1_id, NULL);
-    //pthread_join(thread2_id, NULL);
+    pthread_join(thread2_id, NULL);
     printf("\njoined threads\n");
 
     print_buffer(b.buf, BSIZE);
