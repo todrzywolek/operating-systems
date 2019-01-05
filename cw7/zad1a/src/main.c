@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include "common.h"
 #include "producer.h"
-
-#define LINE_LENGHT 255
-#define BUFFER_SIZE 200
 
 void validate_arguments_number(int number_of_arguments);
 FILE *open_input_file(char const *filename);
+void print_buffer(char *buffer[], int bsize);
 
 int main(int argc, char const *argv[])
 {
@@ -16,22 +15,32 @@ int main(int argc, char const *argv[])
 
     struct file_params file_parameters;
     file_parameters.fp = fp;
-    pthread_mutex_init(&file_parameters.mutex, NULL);
+    //pthread_mutex_init(&file_parameters.mutex, NULL);
+
+    struct buffer_t b;
+    b.nextin = 0;
+    for (int i = 0; i < BSIZE; i++)
+    {
+        b.buf[i] = NULL;
+    }
 
     struct producer_params producer_parameters;
     producer_parameters.file_params = &file_parameters;
+    producer_parameters.buffer = &b;
 
     pthread_t thread1_id;
-    pthread_t thread2_id;
+    //pthread_t thread2_id;
 
     pthread_create(&thread1_id, NULL, &producer_start, &producer_parameters);
     printf("\nCreated thread with id=%ld\n", thread1_id);
-    pthread_create(&thread2_id, NULL, &producer_start, &producer_parameters);
-    printf("\nCreated thread with id=%ld\n", thread2_id);
+    //pthread_create(&thread2_id, NULL, &producer_start, &producer_parameters);
+    //printf("\nCreated thread with id=%ld\n", thread2_id);
 
     pthread_join(thread1_id, NULL);
-    pthread_join(thread2_id, NULL);
+    //pthread_join(thread2_id, NULL);
     printf("\njoined threads\n");
+
+    print_buffer(b.buf, BSIZE);
 
     fclose(fp);
     return 0;
@@ -57,4 +66,16 @@ FILE *open_input_file(char const *filename)
         exit(1);
     }
     return fp;
+}
+
+void print_buffer(char *buffer[], int bsize)
+{
+    int i;
+    for (i = 0; i < bsize; i++)
+    {
+        if (buffer[i] != NULL)
+        {
+            printf("%s\n", buffer[i]);
+        }
+    }
 }

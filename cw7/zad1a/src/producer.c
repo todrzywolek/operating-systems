@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <string.h>
 #include "producer.h"
 
 void *producer_start(void *parameters)
@@ -18,7 +20,7 @@ struct producer_params *parameters_to_producer_params(void *parameters)
 
 void produce(struct producer_params *params)
 {
-    char line[255];
+    char line[LINE_LENGHT];
     printf("start producing\n");
     while (1)
     {
@@ -29,7 +31,7 @@ void produce(struct producer_params *params)
         }
 
         // save line in buffer
-        save_in_buffer(line);
+        save_in_buffer(params->buffer, line);
     }
 }
 
@@ -40,7 +42,7 @@ int read_line(struct file_params *file_parameters, char *line)
 
     char *read_result;
     // read line
-    read_result = fgets(line, sizeof(line), file_parameters->fp);
+    read_result = fgets(line, LINE_LENGHT, file_parameters->fp);
 
     // unlock file mutex
     //pthread_mutex_unlock(&file_parameters->mutex);
@@ -53,14 +55,31 @@ int read_line(struct file_params *file_parameters, char *line)
     return 0;
 }
 
-void save_in_buffer(char *line)
+void save_in_buffer(struct buffer_t *buffer, char *line)
 {
     // lock buffer mutex
+    //pthread_mutex_lock(&buffer->mutex);
+
+    // strip newline from the end
+    line[strcspn(line, "\n")] = 0;
+    int line_length = strlen(line);
 
     // save in buffer
-    printf("%s", line);
+    perform_save(buffer, line, line_length);
 
     // unlock buffer mutex
+    //pthread_mutex_unlock(&buffer->mutex);
+}
+
+void perform_save(struct buffer_t *buffer, char *line, int line_length)
+{
+    if (line_length > 0)
+    {
+        buffer->buf[buffer->nextin] = (char *)malloc(sizeof(char) * line_length);
+        strcpy(buffer->buf[buffer->nextin], line);
+        buffer->nextin++;
+        buffer->nextin %= BSIZE;
+    }
 }
 
 void read_lines_in_loop(FILE *fp, char *line)
