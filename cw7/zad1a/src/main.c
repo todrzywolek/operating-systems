@@ -24,6 +24,7 @@ int main(int argc, char const *argv[])
     {
         b.buf[i] = NULL;
     }
+    b.occupied = 0;
 
     struct producer_params producer_parameters;
     producer_parameters.file_params = &file_parameters;

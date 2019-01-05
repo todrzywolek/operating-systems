@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "producer.h"
 
 void *producer_start(void *parameters)
@@ -64,12 +65,22 @@ void save_in_buffer(struct buffer_t *buffer, char *line, int line_num)
     // lock buffer mutex
     //pthread_mutex_lock(&buffer->mutex);
 
+    while (buffer->occupied >= BSIZE)
+    {
+        printf("Thread: %ld - Buffer full. Waiting...\n", pthread_self());
+        pthread_cond_wait(&buffer->less, &buffer->mutex);
+    }
+
+    assert(buffer->occupied < BSIZE);
+
     // strip newline from the end
     line[strcspn(line, "\n")] = 0;
     int line_length = strlen(line);
 
     // save in buffer
     perform_save(buffer, line, line_length, line_num);
+
+    pthread_cond_signal(&buffer->more);
 
     // unlock buffer mutex
     //pthread_mutex_unlock(&buffer->mutex);
@@ -84,10 +95,11 @@ void perform_save(struct buffer_t *buffer, char *line, int line_length, int line
         strcpy(buffer->buf[buffer->nextin], line);
         buffer->nextin++;
         buffer->nextin %= BSIZE;
+        buffer->occupied++;
     }
     else
     {
-        printf("Thread: %ld - Line num %d empty, not saving.\n", pthread_self(), line_num);
+        printf("Thread: %ld - Line num %d empty, skipping.\n", pthread_self(), line_num);
     }
 }
 
