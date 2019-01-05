@@ -13,23 +13,15 @@ int main(int argc, char const *argv[])
     validate_arguments_number(argc);
     FILE *fp = open_input_file(argv[1]);
 
-    struct file_params file_parameters;
-    file_parameters.fp = fp;
-    file_parameters.line_num = 1;
-    pthread_mutex_init(&file_parameters.mutex, NULL);
-
+    // structure declarations
+    struct file_params_t file_parameters;
     struct buffer_t b;
-    b.nextin = 0;
-    for (int i = 0; i < BSIZE; i++)
-    {
-        b.buf[i] = NULL;
-    }
-    b.occupied = 0;
-    pthread_mutex_init(&b.mutex, NULL);
-
-    struct producer_params producer_parameters;
-    producer_parameters.file_params = &file_parameters;
-    producer_parameters.buffer = &b;
+    struct producer_params_t producer_parameters;
+    
+    // structure initialization
+    init_file_parameters(&file_parameters, fp);
+    init_buffer(&b);
+    init_producer_parameters(&producer_parameters, &file_parameters, &b);
 
     pthread_t thread1_id;
     pthread_t thread2_id;

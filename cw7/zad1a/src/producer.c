@@ -5,7 +5,7 @@
 
 void *producer_start(void *parameters)
 {
-    struct producer_params *p;
+    struct producer_params_t *p;
     p = parameters_to_producer_params(parameters);
 
     // run producer
@@ -14,12 +14,12 @@ void *producer_start(void *parameters)
     return NULL;
 }
 
-struct producer_params *parameters_to_producer_params(void *parameters)
+struct producer_params_t *parameters_to_producer_params(void *parameters)
 {
-    return (struct producer_params *)parameters;
+    return (struct producer_params_t *)parameters;
 }
 
-void produce(struct producer_params *params)
+void produce(struct producer_params_t *params)
 {
     char line[LINE_LENGHT];
     int line_num = 0;
@@ -37,7 +37,7 @@ void produce(struct producer_params *params)
     }
 }
 
-int read_line(struct file_params *file_parameters, char *line, int *line_num)
+int read_line(struct file_params_t *file_parameters, char *line, int *line_num)
 {
     // lock file mutex
     pthread_mutex_lock(&file_parameters->mutex);
@@ -103,10 +103,26 @@ void perform_save(struct buffer_t *buffer, char *line, int line_length, int line
     }
 }
 
+void init_file_parameters(struct file_params_t *file_params, FILE *fp)
+{
+    file_params->fp = fp;
+    file_params->line_num = 1;
+    pthread_mutex_init(&file_params->mutex, NULL);
+}
+
+void init_producer_parameters(struct producer_params_t *producer_params,
+                              struct file_params_t *file_parameters,
+                              struct buffer_t *b)
+{
+    producer_params->file_params = file_parameters;
+    producer_params->buffer = b;
+}
+
 void read_lines_in_loop(FILE *fp, char *line)
 {
     while (1)
     {
+
         fgets(line, sizeof(line), fp);
         printf("%s", line);
         if (feof(fp))

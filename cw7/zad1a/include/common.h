@@ -5,8 +5,8 @@
 #define BSIZE 100
 #endif
 
-
-struct buffer_t {
+struct buffer_t
+{
     char *buf[BSIZE];
     int occupied;
     int nextin;
@@ -14,3 +14,5 @@ struct buffer_t {
     pthread_cond_t more;
     pthread_cond_t less;
 };
+
+void init_buffer(struct buffer_t *b);
