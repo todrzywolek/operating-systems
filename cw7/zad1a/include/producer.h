@@ -34,3 +34,4 @@ void init_producer_parameters(struct producer_params_t *producer_params,
                               char const *argv[]);
 
 void read_lines_in_loop(FILE *fp, char *line);
+char *trimwhitespace(char *str);

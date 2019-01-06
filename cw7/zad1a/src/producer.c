@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <ctype.h>
 #include "producer.h"
 
 void *producer_start(void *parameters)
@@ -50,6 +51,7 @@ int read_line(struct file_params_t *file_parameters, char *line, int *line_num, 
     if (logging_level == 2)
         printf("Thread: %ld - Reading line num %d\n", pthread_self(), file_parameters->line_num);
     read_result = fgets(line, LINE_LENGHT, file_parameters->fp);
+    line = trimwhitespace(line);
     *line_num = file_parameters->line_num;
     file_parameters->line_num++;
 
@@ -139,4 +141,26 @@ void read_lines_in_loop(FILE *fp, char *line)
             fseek(fp, 0, SEEK_SET);
         }
     }
+}
+
+char *trimwhitespace(char *str)
+{
+    char *end;
+
+    // Trim leading space
+    while (isspace((unsigned char)*str))
+        str++;
+
+    if (*str == 0) // All spaces?
+        return str;
+
+    // Trim trailing space
+    end = str + strlen(str) - 1;
+    while (end > str && isspace((unsigned char)*end))
+        end--;
+
+    // Write new null terminator character
+    end[1] = '\0';
+
+    return str;
 }
