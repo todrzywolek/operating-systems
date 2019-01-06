@@ -28,7 +28,7 @@ void produce(struct producer_params_t *params)
     {
         if (read_line(params->file_params, line, &line_num))
         {
-            printf("end work\n");
+            printf("Producer thread no %ld - stopping work.\n", pthread_self());
             break;
         }
 

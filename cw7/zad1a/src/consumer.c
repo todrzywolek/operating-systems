@@ -29,7 +29,7 @@ void consume(struct consumer_params_t *cp)
         // check if should exit
         if (cp->should_exit)
         {
-            printf("Consumer is stopping\n");
+            printf("Consumer thread no %ld - stopping work.\n", pthread_self());
             break;
         }
 

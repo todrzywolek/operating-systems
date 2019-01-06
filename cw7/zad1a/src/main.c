@@ -10,12 +10,12 @@
 #endif
 
 #ifndef CONSUMER_NUM
-#define CONSUMER_NUM 1
+#define CONSUMER_NUM 4
 #endif
 
 void validate_arguments_number(int number_of_arguments);
 FILE *open_input_file(char const *filename);
-void create_threads(pthread_t *threads, int size, void* funct, void *params, char *type);
+void create_threads(pthread_t *threads, int size, void *funct, void *params, char *type);
 void join_threads(pthread_t *producers, int size);
 void print_buffer(char *buffer[], int bsize);
 
@@ -50,6 +50,7 @@ int main(int argc, char const *argv[])
 
     // mark consumers to finish
     consumer_parameters.should_exit = 1;
+    printf("Shuld exit status: %d", consumer_parameters.should_exit);
     join_threads(consumers, CONSUMER_NUM);
 
     //print_buffer(b.buf, BSIZE);
@@ -81,7 +82,7 @@ FILE *open_input_file(char const *filename)
     return fp;
 }
 
-void create_threads(pthread_t *threads, int size, void* funct, void *params, char *type)
+void create_threads(pthread_t *threads, int size, void *funct, void *params, char *type)
 {
     int i;
     for (i = 0; i < size; i++)
