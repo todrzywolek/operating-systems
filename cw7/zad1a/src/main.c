@@ -11,6 +11,7 @@ FILE *open_input_file(char const *filename);
 void create_threads(pthread_t *threads, int size, void *funct, void *params, char *type);
 void set_quit_flag(struct producer_params_t *pparams);
 void join_threads(pthread_t *producers, int size);
+void cleanup_params(struct buffer_t *b, struct file_params_t *file_parameters, struct producer_params_t *producer_parameters);
 void clean_buffer(struct buffer_t *b);
 
 int main(int argc, char const *argv[])
@@ -63,6 +64,7 @@ int main(int argc, char const *argv[])
     }
 
     printf("Doing cleanup\n");
+    cleanup_params(&b, &file_parameters, &producer_parameters);
     //clean_buffer(&b);
     free(b.buf);
     free(fp);
@@ -108,6 +110,13 @@ void join_threads(pthread_t *threads, int size)
         printf("Joined thread num %ld\n", threads[i]);
         pthread_join(threads[i], NULL);
     }
+}
+
+void cleanup_params(struct buffer_t *b, struct file_params_t *file_parameters, struct producer_params_t *producer_parameters)
+{
+    pthread_mutex_destroy(&b->mutex);
+    pthread_mutex_destroy(&file_parameters->mutex);
+    pthread_mutex_destroy(&producer_parameters->pparams_mutex);
 }
 
 void clean_buffer(struct buffer_t *b)
