@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <unistd.h>
 #include "input_validation.h"
 #include "common.h"
 #include "producer.h"
@@ -8,6 +9,7 @@
 
 FILE *open_input_file(char const *filename);
 void create_threads(pthread_t *threads, int size, void *funct, void *params, char *type);
+void set_quit_flag(struct producer_params_t *pparams);
 void join_threads(pthread_t *producers, int size);
 void clean_buffer(struct buffer_t *b);
 
@@ -42,6 +44,14 @@ int main(int argc, char const *argv[])
     printf("Producers created\n");
     create_threads(consumers, consumers_number, &consumer_start, &consumer_parameters, "consumer");
     printf("Consumers created\n");
+
+    int nk = atoi(argv[8]);
+
+    if (nk > 0)
+    {
+        sleep(nk);
+        set_quit_flag(&producer_parameters);
+    }
 
     join_threads(producers, producers_number);
 
@@ -81,6 +91,13 @@ void create_threads(pthread_t *threads, int size, void *funct, void *params, cha
         pthread_create(&(threads[i]), NULL, funct, params);
         printf("\nCreated %s thread with id=%ld\n", type, threads[i]);
     }
+}
+
+void set_quit_flag(struct producer_params_t *pparams)
+{
+    pthread_mutex_lock(&pparams->pparams_mutex);
+    pparams->stop = 1;
+    pthread_mutex_unlock(&pparams->pparams_mutex);
 }
 
 void join_threads(pthread_t *threads, int size)

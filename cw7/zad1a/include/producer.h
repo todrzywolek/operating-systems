@@ -20,6 +20,8 @@ struct producer_params_t
     struct buffer_t *buffer;
     int logging_level;
     int nk;
+    int stop;
+    pthread_mutex_t pparams_mutex;
 };
 
 void *producer_start(void *parameters);
@@ -36,5 +38,5 @@ void init_producer_parameters(struct producer_params_t *producer_params,
                               struct buffer_t *b,
                               char const *argv[]);
 
-int read_lines_in_loop(struct file_params_t *file_parameters, char *line, int *line_num, int logging_level);
+int read_lines_in_loop(struct producer_params_t *params, char *line, int *line_num);
 char *trimwhitespace(char *str);

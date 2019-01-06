@@ -2,6 +2,7 @@
 #include <string.h>
 #include <assert.h>
 #include <ctype.h>
+#include <pthread.h>
 #include "producer.h"
 
 void *producer_start(void *parameters)
@@ -56,7 +57,7 @@ void time_depended_producer_mode(struct producer_params_t *params)
     int line_num = 0;
     while (1)
     {
-        if (read_lines_in_loop(params->file_params, line, &line_num, params->logging_level))
+        if (read_lines_in_loop(params, line, &line_num))
         {
             if (params->logging_level == 2)
                 printf("Producer thread no %ld - stopping work.\n", pthread_self());
@@ -154,14 +155,20 @@ void init_producer_parameters(struct producer_params_t *producer_params,
     producer_params->buffer = b;
     producer_params->logging_level = atoi(argv[7]);
     producer_params->nk = atoi(argv[8]);
+    producer_params->stop = 0;
+    pthread_mutex_init(&producer_params->pparams_mutex, NULL);
 }
 
-int read_lines_in_loop(struct file_params_t *file_parameters, char *line, int *line_num, int logging_level)
+int read_lines_in_loop(struct producer_params_t *params, char *line, int *line_num)
 {
+    if (params->stop)
+        return 1;
+
+    struct file_params_t *file_parameters = params->file_params;
     // lock file mutex
     pthread_mutex_lock(&file_parameters->mutex);
     // read line
-    if (logging_level == 2)
+    if (params->logging_level == 2)
         printf("Thread: %ld - Reading line num %d\n", pthread_self(), file_parameters->line_num);
 
     fgets(line, LINE_LENGHT, file_parameters->fp);
