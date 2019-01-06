@@ -10,4 +10,6 @@ void init_buffer(struct buffer_t *b)
     }
     b->occupied = 0;
     pthread_mutex_init(&b->mutex, NULL);
+    pthread_cond_init(&b->more, NULL);
+    pthread_cond_init(&b->less, NULL);
 }
