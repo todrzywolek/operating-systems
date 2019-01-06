@@ -17,7 +17,7 @@ void validate_arguments_number(int number_of_arguments);
 FILE *open_input_file(char const *filename);
 void create_threads(pthread_t *threads, int size, void *funct, void *params, char *type);
 void join_threads(pthread_t *producers, int size);
-void print_buffer(char *buffer[], int bsize);
+void clean_buffer(struct buffer_t *b);
 
 int main(int argc, char const *argv[])
 {
@@ -44,19 +44,22 @@ int main(int argc, char const *argv[])
     create_threads(producers, PRODUCER_NUM, &producer_start, &producer_parameters, "producer");
     printf("Producers created\n");
     create_threads(consumers, CONSUMER_NUM, &consumer_start, &consumer_parameters, "consumer");
-    //printf("Consumers created\n");
+    printf("Consumers created\n");
 
     join_threads(producers, PRODUCER_NUM);
 
     // mark consumers to finish
     consumer_parameters.should_exit = 1;
-    printf("Shuld exit status: %d", consumer_parameters.should_exit);
-    join_threads(consumers, CONSUMER_NUM);
+    for (int i = 0; i < CONSUMER_NUM; i++)
+    {
+        pthread_cancel(consumers[i]);
+    }
 
-    //print_buffer(b.buf, BSIZE);
+    printf("Doing cleanup\n");
+    //clean_buffer(&b);
+    free(fp);
+
     printf("Finishing work\n");
-
-    fclose(fp);
     return 0;
 }
 
@@ -102,14 +105,15 @@ void join_threads(pthread_t *threads, int size)
     }
 }
 
-void print_buffer(char *buffer[], int bsize)
+void clean_buffer(struct buffer_t *b)
 {
     int i;
-    for (i = 0; i < bsize; i++)
+    for (i = 0; i < BSIZE; i++)
     {
-        if (buffer[i] != NULL)
+        if (b->buf[i] != NULL)
         {
-            printf("%s\n", buffer[i]);
+            free(b->buf[i]);
+            b->buf[i] = NULL;
         }
     }
 }
