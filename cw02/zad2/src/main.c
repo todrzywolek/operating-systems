@@ -6,7 +6,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <time.h>
-
 #include "utils.h"
 
 int year;
@@ -16,8 +15,10 @@ char sign;
 
 void validate_args(int argc, char *argv[]);
 void search(char *path, int mode);
-void nftw_search(char *path);
 void readdir_search(char *path);
+DIR *open_directory(char *path);
+void set_file_access(char *access, struct stat *buf);
+void nftw_search(char *path);
 
 int main(int argc, char *argv[])
 {
@@ -37,7 +38,7 @@ void validate_args(int argc, char *argv[])
 {
     if (argc != 7)
     {
-        printf("Invalid args number. Expected 6, given !\n", argc - 1);
+        printf("Invalid args number. Expected 6, given %d!\n", argc - 1);
         exit(-1);
     }
 
@@ -83,11 +84,13 @@ void readdir_search(char *path)
         }
         else if (S_ISREG(buf.st_mode))
         {
-            int fsize = buf.st_size;
-            time_t mdate = buf.st_mtime;
-            char *access = set_file_access(&buf);
+            //int fsize = buf.st_size;
+            //time_t mdate = buf.st_mtime;
+            // access
+            char access[10] = "---------";
+            set_file_access(access, &buf);
 
-            printf("File access: %s", access);
+            printf("File access: %s\n", access);
         }
         free(fpath);
     }
@@ -97,8 +100,9 @@ void readdir_search(char *path)
     }
 }
 
-void open_directory(char *path)
+DIR *open_directory(char *path)
 {
+    printf("Path:%s\n", path);
     DIR *dir = opendir(path);
     if (dir == NULL)
     {
@@ -109,9 +113,9 @@ void open_directory(char *path)
     return dir;
 }
 
-char *set_file_access(struct stat *buf)
+void set_file_access(char *access, struct stat *buf)
 {
-    char access[10] = "---------";
+    printf("Setting file access.\n");
 
     if (buf->st_mode & S_IRUSR)
         access[0] = 'r'; /*owner*/
@@ -131,8 +135,6 @@ char *set_file_access(struct stat *buf)
         access[7] = 'w'; /*other*/
     if (buf->st_mode & S_IXOTH)
         access[8] = 'x'; /*other*/
-
-    return access;
 }
 
 void nftw_search(char *path)
