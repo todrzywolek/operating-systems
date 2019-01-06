@@ -22,40 +22,48 @@ struct producer_params_t *parameters_to_producer_params(void *parameters)
 
 void produce(struct producer_params_t *params)
 {
-    char line[LINE_LENGHT];
-    int line_num = 0;
     if (params->logging_level == 2)
         printf("Producer no %ld - Starts producing\n", pthread_self());
 
+    if (params->nk == 0)
+        file_dependend_producer_mode(params);
+    else if (params->nk > 0)
+        time_depended_producer_mode(params);
+    else
+        printf("nk param should be greater or equal to 0. Stopping producer.\n");
+}
+
+void file_dependend_producer_mode(struct producer_params_t *params)
+{
+    char line[LINE_LENGHT];
+    int line_num = 0;
     while (1)
     {
-        if (params->nk == 0)
+        if (read_line(params->file_params, line, &line_num, params->logging_level))
         {
-            if (read_line(params->file_params, line, &line_num, params->logging_level))
-            {
-                if (params->logging_level == 2)
-                    printf("Producer thread no %ld - stopping work.\n", pthread_self());
-                break;
-            }
-            // save line in buffer
-            save_in_buffer(params->buffer, line, line_num, params->logging_level);
-        }
-        else if (params->nk > 0)
-        {
-            if (read_lines_in_loop(params->file_params, line, &line_num, params->logging_level))
-            {
-                if (params->logging_level == 2)
-                    printf("Producer thread no %ld - stopping work.\n", pthread_self());
-                break;
-            }
-            // save line in buffer
-            save_in_buffer(params->buffer, line, line_num, params->logging_level);
-        }
-        else
-        {
-            printf("nk param should be greater or equel to 0. Stopping producer.\n");
+            if (params->logging_level == 2)
+                printf("Producer thread no %ld - stopping work.\n", pthread_self());
             break;
         }
+        // save line in buffer
+        save_in_buffer(params->buffer, line, line_num, params->logging_level);
+    }
+}
+
+void time_depended_producer_mode(struct producer_params_t *params)
+{
+    char line[LINE_LENGHT];
+    int line_num = 0;
+    while (1)
+    {
+        if (read_lines_in_loop(params->file_params, line, &line_num, params->logging_level))
+        {
+            if (params->logging_level == 2)
+                printf("Producer thread no %ld - stopping work.\n", pthread_self());
+            break;
+        }
+        // save line in buffer
+        save_in_buffer(params->buffer, line, line_num, params->logging_level);
     }
 }
 
