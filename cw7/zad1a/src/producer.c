@@ -29,15 +29,33 @@ void produce(struct producer_params_t *params)
 
     while (1)
     {
-        if (read_line(params->file_params, line, &line_num, params->logging_level))
+        if (params->nk == 0)
         {
-            if (params->logging_level == 2)
-                printf("Producer thread no %ld - stopping work.\n", pthread_self());
+            if (read_line(params->file_params, line, &line_num, params->logging_level))
+            {
+                if (params->logging_level == 2)
+                    printf("Producer thread no %ld - stopping work.\n", pthread_self());
+                break;
+            }
+            // save line in buffer
+            save_in_buffer(params->buffer, line, line_num, params->logging_level);
+        }
+        else if (params->nk > 0)
+        {
+            if (read_lines_in_loop(params->file_params, line, &line_num, params->logging_level))
+            {
+                if (params->logging_level == 2)
+                    printf("Producer thread no %ld - stopping work.\n", pthread_self());
+                break;
+            }
+            // save line in buffer
+            save_in_buffer(params->buffer, line, line_num, params->logging_level);
+        }
+        else
+        {
+            printf("nk param should be greater or equel to 0. Stopping producer.\n");
             break;
         }
-
-        // save line in buffer
-        save_in_buffer(params->buffer, line, line_num, params->logging_level);
     }
 }
 
@@ -127,20 +145,32 @@ void init_producer_parameters(struct producer_params_t *producer_params,
     producer_params->file_params = file_parameters;
     producer_params->buffer = b;
     producer_params->logging_level = atoi(argv[7]);
+    producer_params->nk = atoi(argv[8]);
 }
 
-void read_lines_in_loop(FILE *fp, char *line)
+int read_lines_in_loop(struct file_params_t *file_parameters, char *line, int *line_num, int logging_level)
 {
-    while (1)
-    {
+    // lock file mutex
+    pthread_mutex_lock(&file_parameters->mutex);
+    // read line
+    if (logging_level == 2)
+        printf("Thread: %ld - Reading line num %d\n", pthread_self(), file_parameters->line_num);
 
-        fgets(line, sizeof(line), fp);
-        printf("%s", line);
-        if (feof(fp))
-        {
-            fseek(fp, 0, SEEK_SET);
-        }
+    fgets(line, LINE_LENGHT, file_parameters->fp);
+    line = trimwhitespace(line);
+    *line_num = file_parameters->line_num;
+    file_parameters->line_num++;
+
+    if (feof(file_parameters->fp))
+    {
+        fseek(file_parameters->fp, 0, SEEK_SET);
+        file_parameters->line_num = 1;
     }
+
+    // unlock file mutex
+    pthread_mutex_unlock(&file_parameters->mutex);
+
+    return 0;
 }
 
 char *trimwhitespace(char *str)

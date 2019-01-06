@@ -19,6 +19,7 @@ struct producer_params_t
     struct file_params_t *file_params;
     struct buffer_t *buffer;
     int logging_level;
+    int nk;
 };
 
 void *producer_start(void *parameters);
@@ -33,5 +34,5 @@ void init_producer_parameters(struct producer_params_t *producer_params,
                               struct buffer_t *b,
                               char const *argv[]);
 
-void read_lines_in_loop(FILE *fp, char *line);
+int read_lines_in_loop(struct file_params_t *file_parameters, char *line, int *line_num, int logging_level);
 char *trimwhitespace(char *str);
