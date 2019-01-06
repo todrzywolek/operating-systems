@@ -18,6 +18,7 @@ struct producer_params_t
 {
     struct file_params_t *file_params;
     struct buffer_t *buffer;
+    int logging_level;
 };
 
 void *producer_start(void *parameters);
@@ -29,6 +30,7 @@ void perform_save(struct buffer_t *buffer, char *line, int line_length, int line
 void init_file_parameters(struct file_params_t *file_params, FILE *fp);
 void init_producer_parameters(struct producer_params_t *producer_params,
                               struct file_params_t *file_parameters,
-                              struct buffer_t *b);
+                              struct buffer_t *b,
+                              char const *argv[]);
 
 void read_lines_in_loop(FILE *fp, char *line);

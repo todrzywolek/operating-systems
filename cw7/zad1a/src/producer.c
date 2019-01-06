@@ -65,13 +65,13 @@ void save_in_buffer(struct buffer_t *buffer, char *line, int line_num)
     // lock buffer mutex
     pthread_mutex_lock(&buffer->mutex);
 
-    while (buffer->occupied >= BSIZE)
+    while (buffer->occupied >= buffer->buffer_size)
     {
         printf("Thread: %ld - Buffer full. Waiting...\n", pthread_self());
         pthread_cond_wait(&buffer->less, &buffer->mutex);
     }
 
-    assert(buffer->occupied < BSIZE);
+    assert(buffer->occupied < buffer->buffer_size);
 
     // strip newline from the end
     line[strcspn(line, "\n")] = 0;
@@ -94,7 +94,7 @@ void perform_save(struct buffer_t *buffer, char *line, int line_length, int line
         buffer->buf[buffer->nextin] = (char *)malloc(sizeof(char) * (line_length+1));
         strcpy(buffer->buf[buffer->nextin], line);
         buffer->nextin++;
-        buffer->nextin %= BSIZE;
+        buffer->nextin %= buffer->buffer_size;
         buffer->occupied++;
     }
     else
@@ -112,10 +112,12 @@ void init_file_parameters(struct file_params_t *file_params, FILE *fp)
 
 void init_producer_parameters(struct producer_params_t *producer_params,
                               struct file_params_t *file_parameters,
-                              struct buffer_t *b)
+                              struct buffer_t *b,
+                              char const *argv[])
 {
     producer_params->file_params = file_parameters;
     producer_params->buffer = b;
+    producer_params->logging_level = atoi(argv[7]);
 }
 
 void read_lines_in_loop(FILE *fp, char *line)

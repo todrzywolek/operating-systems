@@ -1,19 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include "input_validation.h"
 #include "common.h"
 #include "producer.h"
 #include "consumer.h"
 
-#ifndef PRODUCER_NUM
-#define PRODUCER_NUM 1
-#endif
-
-#ifndef CONSUMER_NUM
-#define CONSUMER_NUM 4
-#endif
-
-void validate_arguments_number(int number_of_arguments);
 FILE *open_input_file(char const *filename);
 void create_threads(pthread_t *threads, int size, void *funct, void *params, char *type);
 void join_threads(pthread_t *producers, int size);
@@ -22,55 +14,51 @@ void clean_buffer(struct buffer_t *b);
 int main(int argc, char const *argv[])
 {
     validate_arguments_number(argc);
-    FILE *fp = open_input_file(argv[1]);
+    FILE *fp = open_input_file(argv[4]);
 
     // structure declarations
     struct buffer_t b;
     struct file_params_t file_parameters;
+    struct consumer_mode_t consumer_mode;
     struct producer_params_t producer_parameters;
     struct consumer_params_t consumer_parameters;
 
     // producer thread array
-    pthread_t producers[PRODUCER_NUM];
+    int producers_number = read_producers_number(argv);
+    pthread_t producers[producers_number];
     // consumer thread array
-    pthread_t consumers[CONSUMER_NUM];
+    int consumers_number = read_consumers_number(argv);
+    pthread_t consumers[consumers_number];
 
     // structure initialization
-    init_buffer(&b);
+    int buffer_size = read_buffer_size(argv);
+    init_buffer(&b, buffer_size);
     init_file_parameters(&file_parameters, fp);
-    init_producer_parameters(&producer_parameters, &file_parameters, &b);
-    init_consumer_parameters(&consumer_parameters, &b);
+    init_consumer_mode(&consumer_mode, argv);
+    init_producer_parameters(&producer_parameters, &file_parameters, &b, argv);
+    init_consumer_parameters(&consumer_parameters, &b, &consumer_mode);
 
-    create_threads(producers, PRODUCER_NUM, &producer_start, &producer_parameters, "producer");
+    create_threads(producers, producers_number, &producer_start, &producer_parameters, "producer");
     printf("Producers created\n");
-    create_threads(consumers, CONSUMER_NUM, &consumer_start, &consumer_parameters, "consumer");
+    create_threads(consumers, consumers_number, &consumer_start, &consumer_parameters, "consumer");
     printf("Consumers created\n");
 
-    join_threads(producers, PRODUCER_NUM);
+    join_threads(producers, producers_number);
 
     // mark consumers to finish
     consumer_parameters.should_exit = 1;
-    for (int i = 0; i < CONSUMER_NUM; i++)
+    for (int i = 0; i < consumers_number; i++)
     {
         pthread_cancel(consumers[i]);
     }
 
     printf("Doing cleanup\n");
     //clean_buffer(&b);
+    free(b.buf);
     free(fp);
 
     printf("Finishing work\n");
     return 0;
-}
-
-void validate_arguments_number(int number_of_arguments)
-{
-    if (number_of_arguments != 2)
-    {
-        printf("Invalid number of arguments\n");
-        printf("Proper usage <FILE_NAME>\n");
-        exit(-1);
-    }
 }
 
 FILE *open_input_file(char const *filename)
@@ -108,7 +96,7 @@ void join_threads(pthread_t *threads, int size)
 void clean_buffer(struct buffer_t *b)
 {
     int i;
-    for (i = 0; i < BSIZE; i++)
+    for (i = 0; i < b->buffer_size; i++)
     {
         if (b->buf[i] != NULL)
         {

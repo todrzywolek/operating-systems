@@ -1,17 +1,10 @@
 #pragma once
 #include <pthread.h>
 
-#ifndef BSIZE
-#define BSIZE 100
-#endif
-
-#ifndef LIMIT
-#define LIMIT 45
-#endif
-
 struct buffer_t
 {
-    char *buf[BSIZE];
+    char **buf;
+    int buffer_size;
     int occupied;
     int nextin;
     int nextout;
@@ -20,4 +13,4 @@ struct buffer_t
     pthread_cond_t less;
 };
 
-void init_buffer(struct buffer_t *b);
+void init_buffer(struct buffer_t *b, int buffer_size);
