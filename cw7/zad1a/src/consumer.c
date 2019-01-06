@@ -36,11 +36,11 @@ void consume(struct consumer_params_t *cp)
         }
 
         // else read buffer
-        read_buffer(cp->buffer, cp->mode->length, cp->mode->logging_level);
+        read_buffer(cp->buffer, cp->mode->length, cp->mode->comp_mode, cp->mode->logging_level);
     }
 }
 
-void read_buffer(struct buffer_t *b, int comparing_length, int logging_level)
+void read_buffer(struct buffer_t *b, int comparing_length, int comp_mode, int logging_level)
 {
     char *line;
     if (logging_level == 2)
@@ -61,10 +61,10 @@ void read_buffer(struct buffer_t *b, int comparing_length, int logging_level)
     line = b->buf[b->nextout];
     if (logging_level == 2)
         printf("Reading line from index=%d\n", b->nextout);
-    if (strlen(line) > comparing_length)
-    {
-        printf("index=%d\t%s\n", b->nextout, line);
-    }
+
+    // actual work
+    compare(line, comparing_length, b->nextout, comp_mode);
+
     free(line);
     line = NULL;
     b->nextout++;
@@ -75,6 +75,35 @@ void read_buffer(struct buffer_t *b, int comparing_length, int logging_level)
 
     // unlock buffer mutex
     pthread_mutex_unlock(&b->mutex);
+}
+
+void compare(char *text, int comparing_length, int line_num, int comp_mode)
+{
+    if (comp_mode == 1)
+    {
+        if (strlen(text) > comparing_length)
+        {
+            printf("index=%d\t%s\n", line_num, text);
+        }
+    }
+    else if (comp_mode == 2)
+    {
+        if (strlen(text) == comparing_length)
+        {
+            printf("index=%d\t%s\n", line_num, text);
+        }
+    }
+    else if (comp_mode == 3)
+    {
+        if (strlen(text) < comparing_length)
+        {
+            printf("index=%d\t%s\n", line_num, text);
+        }
+    }
+    else
+    {
+        printf("Invalid compare mode\n");
+    }
 }
 
 void init_consumer_mode(struct consumer_mode_t *consumer_mode, char const *argv[])
