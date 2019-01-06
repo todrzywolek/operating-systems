@@ -4,16 +4,29 @@ CC = gcc
 OBJECT=$(CC) $< $(CFLAGS) -o $@
 
 main: bin/main.o \
-		bin/utils.o
+		bin/utils.o \
+		bin/readdir_search.o \
+		bin/nftw_search.o
 	$(CC) $^ -o $@
 
 bin/main.o: src/main.c \
-			include/utils.h | bin
+			include/utils.h \
+			include/readdir_search.h \
+			include/nftw_search.h | bin
 	$(OBJECT)
 
 bin/utils.o: src/utils.c \
 				include/utils.h | bin
 	$(OBJECT)
+
+bin/readdir_search.o: src/readdir_search.c \
+				include/readdir_search.h | bin
+	$(OBJECT)
+
+bin/nftw_search.o: src/nftw_search.c \
+				include/nftw_search.h | bin
+	$(OBJECT)
+
 
 bin:
 	mkdir bin
