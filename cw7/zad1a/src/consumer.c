@@ -23,39 +23,44 @@ struct consumer_params_t *parameters_to_consumer_params(void *parameters)
 
 void consume(struct consumer_params_t *cp)
 {
-    printf("start consuming\n");
+    if (cp->mode->logging_level == 2)
+        printf("Consumer no %ld - Starts consuming\n", pthread_self());
     while (1)
     {
         // check if should exit
         if (cp->should_exit)
         {
-            printf("Consumer thread no %ld - stopping work.\n", pthread_self());
+            if (cp->mode->logging_level == 2)
+                printf("Consumer thread no %ld - stopping work.\n", pthread_self());
             break;
         }
 
         // else read buffer
-        read_buffer(cp->buffer, cp->mode->length);
+        read_buffer(cp->buffer, cp->mode->length, cp->mode->logging_level);
     }
 }
 
-void read_buffer(struct buffer_t *b, int comparing_length)
+void read_buffer(struct buffer_t *b, int comparing_length, int logging_level)
 {
     char *line;
-    printf("Thread:%ld - Reading buffer\n", pthread_self());
+    if (logging_level == 2)
+        printf("Thread:%ld - Reading buffer\n", pthread_self());
     // lock buffer mutex
     pthread_mutex_lock(&b->mutex);
 
     // read buffer
     while (b->occupied <= 0)
     {
-        printf("Thread: %ld - Buffer empty. Waiting...\n", pthread_self());
+        if (logging_level == 2)
+            printf("Thread: %ld - Buffer empty. Waiting...\n", pthread_self());
         pthread_cond_wait(&b->more, &b->mutex);
     }
 
     assert(b->occupied > 0);
 
     line = b->buf[b->nextout];
-    printf("Read line from index=%d\t%s\n", b->nextout, line);
+    if (logging_level == 2)
+        printf("Reading line from index=%d\n", b->nextout);
     if (strlen(line) > comparing_length)
     {
         printf("index=%d\t%s\n", b->nextout, line);

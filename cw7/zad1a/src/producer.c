@@ -23,28 +23,32 @@ void produce(struct producer_params_t *params)
 {
     char line[LINE_LENGHT];
     int line_num = 0;
-    printf("start producing\n");
+    if (params->logging_level == 2)
+        printf("Producer no %ld - Starts producing\n", pthread_self());
+
     while (1)
     {
-        if (read_line(params->file_params, line, &line_num))
+        if (read_line(params->file_params, line, &line_num, params->logging_level))
         {
-            printf("Producer thread no %ld - stopping work.\n", pthread_self());
+            if (params->logging_level == 2)
+                printf("Producer thread no %ld - stopping work.\n", pthread_self());
             break;
         }
 
         // save line in buffer
-        save_in_buffer(params->buffer, line, line_num);
+        save_in_buffer(params->buffer, line, line_num, params->logging_level);
     }
 }
 
-int read_line(struct file_params_t *file_parameters, char *line, int *line_num)
+int read_line(struct file_params_t *file_parameters, char *line, int *line_num, int logging_level)
 {
     // lock file mutex
     pthread_mutex_lock(&file_parameters->mutex);
 
     char *read_result;
     // read line
-    printf("Thread: %ld - Reading line num %d\n", pthread_self(), file_parameters->line_num);
+    if (logging_level == 2)
+        printf("Thread: %ld - Reading line num %d\n", pthread_self(), file_parameters->line_num);
     read_result = fgets(line, LINE_LENGHT, file_parameters->fp);
     *line_num = file_parameters->line_num;
     file_parameters->line_num++;
@@ -60,14 +64,15 @@ int read_line(struct file_params_t *file_parameters, char *line, int *line_num)
     return 0;
 }
 
-void save_in_buffer(struct buffer_t *buffer, char *line, int line_num)
+void save_in_buffer(struct buffer_t *buffer, char *line, int line_num, int logging_level)
 {
     // lock buffer mutex
     pthread_mutex_lock(&buffer->mutex);
 
     while (buffer->occupied >= buffer->buffer_size)
     {
-        printf("Thread: %ld - Buffer full. Waiting...\n", pthread_self());
+        if (logging_level == 2)
+            printf("Thread: %ld - Buffer full. Waiting...\n", pthread_self());
         pthread_cond_wait(&buffer->less, &buffer->mutex);
     }
 
@@ -78,7 +83,7 @@ void save_in_buffer(struct buffer_t *buffer, char *line, int line_num)
     int line_length = strlen(line);
 
     // save in buffer
-    perform_save(buffer, line, line_length, line_num);
+    perform_save(buffer, line, line_length, line_num, logging_level);
 
     pthread_cond_signal(&buffer->more);
 
@@ -86,12 +91,13 @@ void save_in_buffer(struct buffer_t *buffer, char *line, int line_num)
     pthread_mutex_unlock(&buffer->mutex);
 }
 
-void perform_save(struct buffer_t *buffer, char *line, int line_length, int line_num)
+void perform_save(struct buffer_t *buffer, char *line, int line_length, int line_num, int logging_level)
 {
     if (line_length > 0)
     {
-        printf("Thread: %ld - Saving line num %d to index %d\t%s\n", pthread_self(), line_num, buffer->nextin, line);
-        buffer->buf[buffer->nextin] = (char *)malloc(sizeof(char) * (line_length+1));
+        if (logging_level == 2)
+            printf("Thread: %ld - Saving line num %d to index %d\tcontent:%s\n", pthread_self(), line_num, buffer->nextin, line);
+        buffer->buf[buffer->nextin] = (char *)malloc(sizeof(char) * (line_length + 1));
         strcpy(buffer->buf[buffer->nextin], line);
         buffer->nextin++;
         buffer->nextin %= buffer->buffer_size;
@@ -99,7 +105,8 @@ void perform_save(struct buffer_t *buffer, char *line, int line_length, int line
     }
     else
     {
-        printf("Thread: %ld - Line num %d empty, skipping.\n", pthread_self(), line_num);
+        if (logging_level == 2)
+            printf("Thread: %ld - Line num %d empty.Not saving.\n", pthread_self(), line_num);
     }
 }
 

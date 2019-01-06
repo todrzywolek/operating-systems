@@ -24,9 +24,9 @@ struct producer_params_t
 void *producer_start(void *parameters);
 struct producer_params_t *parameters_to_producer_params(void *parameters);
 void produce(struct producer_params_t *params);
-int read_line(struct file_params_t *file_parameters, char *line, int *line_num);
-void save_in_buffer(struct buffer_t *buffer, char *line, int line_num);
-void perform_save(struct buffer_t *buffer, char *line, int line_length, int line_num);
+int read_line(struct file_params_t *file_parameters, char *line, int *line_num, int logging_level);
+void save_in_buffer(struct buffer_t *buffer, char *line, int line_num, int logging_level);
+void perform_save(struct buffer_t *buffer, char *line, int line_length, int line_num, int logging_level);
 void init_file_parameters(struct file_params_t *file_params, FILE *fp);
 void init_producer_parameters(struct producer_params_t *producer_params,
                               struct file_params_t *file_parameters,
