@@ -67,7 +67,7 @@ void save_in_buffer(struct buffer_t *buffer, char *line, int line_num)
 
     while (buffer->occupied >= BSIZE)
     {
-        //printf("Thread: %ld - Buffer full. Waiting...\n", pthread_self());
+        printf("Thread: %ld - Buffer full. Waiting...\n", pthread_self());
         pthread_cond_wait(&buffer->less, &buffer->mutex);
     }
 
@@ -90,7 +90,7 @@ void perform_save(struct buffer_t *buffer, char *line, int line_length, int line
 {
     if (line_length > 0)
     {
-        printf("Thread: %ld - Saving line num %d\n", pthread_self(), line_num);
+        printf("Thread: %ld - Saving line num %d to index %d\t%s\n", pthread_self(), line_num, buffer->nextin, line);
         buffer->buf[buffer->nextin] = (char *)malloc(sizeof(char) * line_length);
         strcpy(buffer->buf[buffer->nextin], line);
         buffer->nextin++;

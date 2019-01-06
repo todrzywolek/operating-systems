@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <string.h>
+#include "common.h"
+#include "consumer.h"
+
+void *consumer_start(void *parameters)
+{
+    struct consumer_params_t *cp;
+    cp = parameters_to_consumer_params(parameters);
+
+    // run consumer
+    consume(cp);
+
+    return NULL;
+}
+
+struct consumer_params_t *parameters_to_consumer_params(void *parameters)
+{
+    return (struct consumer_params_t *)parameters;
+}
+
+void consume(struct consumer_params_t *cp)
+{
+    printf("start consuming\n");
+    while (1)
+    {
+        // check if should exit
+        if (cp->should_exit)
+        {
+            printf("Consumer is stopping\n");
+            break;
+        }
+
+        // else read buffer
+        read_buffer(cp->buffer);
+    }
+}
+
+void read_buffer(struct buffer_t *b)
+{
+    printf("Thread:%ld - Reading buffer\n", pthread_self());
+    // lock buffer mutex
+    pthread_mutex_lock(&b->mutex);
+
+    // read buffer
+    while (b->occupied <= 0)
+    {
+        printf("Thread: %ld - Buffer empty. Waiting...\n", pthread_self());
+        pthread_cond_wait(&b->more, &b->mutex);
+    }
+
+    assert(b->occupied > 0);
+
+    printf("Read line from index=%d\t%s\n", b->nextout, b->buf[b->nextout]);
+    if (strlen(b->buf[b->nextout]) > LIMIT)
+    {
+        printf("index=%d\t%s\n", b->nextout, b->buf[b->nextout]);
+    }
+    //free(b->buf[b->nextout]);
+    //b->buf[b->nextout] = NULL;
+    b->nextout++;
+    b->nextout %= BSIZE;
+    b->occupied--;
+
+    pthread_cond_signal(&b->less);
+
+    // unlock buffer mutex
+    pthread_mutex_unlock(&b->mutex);
+}
+
+void init_consumer_parameters(struct consumer_params_t *consumer_parameters, struct buffer_t *b)
+{
+    consumer_parameters->buffer = b;
+    consumer_parameters->should_exit = 0;
+}

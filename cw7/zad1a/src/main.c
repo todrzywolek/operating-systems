@@ -3,15 +3,20 @@
 #include <pthread.h>
 #include "common.h"
 #include "producer.h"
+#include "consumer.h"
 
 #ifndef PRODUCER_NUM
-#define PRODUCER_NUM 3
+#define PRODUCER_NUM 1
+#endif
+
+#ifndef CONSUMER_NUM
+#define CONSUMER_NUM 1
 #endif
 
 void validate_arguments_number(int number_of_arguments);
 FILE *open_input_file(char const *filename);
-void create_producer_threads(pthread_t *producers, int size, void *producer_params);
-void join_producer_threads(pthread_t *producers, int size);
+void create_threads(pthread_t *threads, int size, void* funct, void *params, char *type);
+void join_threads(pthread_t *producers, int size);
 void print_buffer(char *buffer[], int bsize);
 
 int main(int argc, char const *argv[])
@@ -20,25 +25,35 @@ int main(int argc, char const *argv[])
     FILE *fp = open_input_file(argv[1]);
 
     // structure declarations
-    struct file_params_t file_parameters;
     struct buffer_t b;
+    struct file_params_t file_parameters;
     struct producer_params_t producer_parameters;
+    struct consumer_params_t consumer_parameters;
 
     // producer thread array
     pthread_t producers[PRODUCER_NUM];
+    // consumer thread array
+    pthread_t consumers[CONSUMER_NUM];
 
     // structure initialization
-    init_file_parameters(&file_parameters, fp);
     init_buffer(&b);
+    init_file_parameters(&file_parameters, fp);
     init_producer_parameters(&producer_parameters, &file_parameters, &b);
+    init_consumer_parameters(&consumer_parameters, &b);
 
-    create_producer_threads(producers, PRODUCER_NUM, &producer_parameters);
+    create_threads(producers, PRODUCER_NUM, &producer_start, &producer_parameters, "producer");
+    printf("Producers created\n");
+    create_threads(consumers, CONSUMER_NUM, &consumer_start, &consumer_parameters, "consumer");
+    //printf("Consumers created\n");
 
-    printf("created\n");
+    join_threads(producers, PRODUCER_NUM);
 
-    join_producer_threads(producers, PRODUCER_NUM);
+    // mark consumers to finish
+    consumer_parameters.should_exit = 1;
+    join_threads(consumers, CONSUMER_NUM);
 
-    print_buffer(b.buf, BSIZE);
+    //print_buffer(b.buf, BSIZE);
+    printf("Finishing work\n");
 
     fclose(fp);
     return 0;
@@ -66,26 +81,23 @@ FILE *open_input_file(char const *filename)
     return fp;
 }
 
-void create_producer_threads(pthread_t *producers, int size, void *producer_params)
+void create_threads(pthread_t *threads, int size, void* funct, void *params, char *type)
 {
     int i;
     for (i = 0; i < size; i++)
     {
-        pthread_create(&(producers[i]), NULL, &producer_start, producer_params);
-        printf("\nCreated producer thread with id=%ld\n", producers[i]);
-
-        //pthread_create(&thread2_id, NULL, &producer_start, &producer_parameters);
-        //printf("\nCreated thread with id=%ld\n", thread2_id);
+        pthread_create(&(threads[i]), NULL, funct, params);
+        printf("\nCreated %s thread with id=%ld\n", type, threads[i]);
     }
 }
 
-void join_producer_threads(pthread_t *producers, int size)
+void join_threads(pthread_t *threads, int size)
 {
     int i;
     for (i = 0; i < size; i++)
     {
-        printf("Joined thread num %ld\n", producers[i]);
-        pthread_join(producers[i], NULL);
+        printf("Joined thread num %ld\n", threads[i]);
+        pthread_join(threads[i], NULL);
     }
 }
 

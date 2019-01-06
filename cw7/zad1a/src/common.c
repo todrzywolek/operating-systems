@@ -3,6 +3,7 @@
 void init_buffer(struct buffer_t *b)
 {
     b->nextin = 0;
+    b->nextout = 0;
     for (int i = 0; i < BSIZE; i++)
     {
         b->buf[i] = NULL;
