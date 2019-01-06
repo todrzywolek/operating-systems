@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <signal.h>
 #include "input_validation.h"
 #include "common.h"
 #include "producer.h"
@@ -9,10 +10,15 @@
 
 FILE *open_input_file(char const *filename);
 void create_threads(pthread_t *threads, int size, void *funct, void *params, char *type);
-void set_quit_flag(struct producer_params_t *pparams);
+void set_quit_flag();
 void join_threads(pthread_t *producers, int size);
+void handle_signal(int signo);
 void cleanup_params(struct buffer_t *b, struct file_params_t *file_parameters, struct producer_params_t *producer_parameters);
 void clean_buffer(struct buffer_t *b);
+
+// global producer_params delcaration for signal handling
+struct producer_params_t producer_parameters;
+
 
 int main(int argc, char const *argv[])
 {
@@ -23,7 +29,6 @@ int main(int argc, char const *argv[])
     struct buffer_t b;
     struct file_params_t file_parameters;
     struct consumer_mode_t consumer_mode;
-    struct producer_params_t producer_parameters;
     struct consumer_params_t consumer_parameters;
 
     // producer thread array
@@ -51,7 +56,11 @@ int main(int argc, char const *argv[])
     if (nk > 0)
     {
         sleep(nk);
-        set_quit_flag(&producer_parameters);
+        set_quit_flag();
+    }
+    else if (nk == 0)
+    {
+        signal(SIGINT, handle_signal);
     }
 
     join_threads(producers, producers_number);
@@ -95,11 +104,20 @@ void create_threads(pthread_t *threads, int size, void *funct, void *params, cha
     }
 }
 
-void set_quit_flag(struct producer_params_t *pparams)
+void handle_signal(int signo)
 {
-    pthread_mutex_lock(&pparams->pparams_mutex);
-    pparams->stop = 1;
-    pthread_mutex_unlock(&pparams->pparams_mutex);
+    if (signo == SIGINT)
+    {
+        printf("Received SIGINT signal. Setting cancel flag to producers\n");
+        set_quit_flag();
+    }
+}
+
+void set_quit_flag()
+{
+    pthread_mutex_lock(&producer_parameters.pparams_mutex);
+    producer_parameters.stop = 1;
+    pthread_mutex_unlock(&producer_parameters.pparams_mutex);
 }
 
 void join_threads(pthread_t *threads, int size)

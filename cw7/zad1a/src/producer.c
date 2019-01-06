@@ -40,7 +40,7 @@ void file_dependend_producer_mode(struct producer_params_t *params)
     int line_num = 0;
     while (1)
     {
-        if (read_line(params->file_params, line, &line_num, params->logging_level))
+        if (read_line(params->file_params, line, &line_num, params->logging_level) || params->stop == 1)
         {
             if (params->logging_level == 2)
                 printf("Producer thread no %ld - stopping work.\n", pthread_self());
