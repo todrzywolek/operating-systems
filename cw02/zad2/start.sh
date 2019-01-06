@@ -1,0 +1,12 @@
+#!/bin/bash
+
+make
+
+DIR_PATH=~/Documents
+OPERATION=<
+YEAR=2018
+MONTH=03
+DAY=11
+OPEN_MODE=0
+
+./main $DIR_PATH $OPERATION $YEAR $MONTH $DAY $OPEN_MODE
