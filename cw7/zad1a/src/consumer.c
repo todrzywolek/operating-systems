@@ -40,6 +40,7 @@ void consume(struct consumer_params_t *cp)
 
 void read_buffer(struct buffer_t *b)
 {
+    char *line;
     printf("Thread:%ld - Reading buffer\n", pthread_self());
     // lock buffer mutex
     pthread_mutex_lock(&b->mutex);
@@ -53,13 +54,14 @@ void read_buffer(struct buffer_t *b)
 
     assert(b->occupied > 0);
 
-    printf("Read line from index=%d\t%s\n", b->nextout, b->buf[b->nextout]);
-    if (strlen(b->buf[b->nextout]) > LIMIT)
+    line = b->buf[b->nextout];
+    printf("Read line from index=%d\t%s\n", b->nextout, line);
+    if (strlen(line) > LIMIT)
     {
-        printf("index=%d\t%s\n", b->nextout, b->buf[b->nextout]);
+        printf("index=%d\t%s\n", b->nextout, line);
     }
-    //free(b->buf[b->nextout]);
-    //b->buf[b->nextout] = NULL;
+    free(line);
+    line = NULL;
     b->nextout++;
     b->nextout %= BSIZE;
     b->occupied--;

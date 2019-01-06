@@ -91,7 +91,7 @@ void perform_save(struct buffer_t *buffer, char *line, int line_length, int line
     if (line_length > 0)
     {
         printf("Thread: %ld - Saving line num %d to index %d\t%s\n", pthread_self(), line_num, buffer->nextin, line);
-        buffer->buf[buffer->nextin] = (char *)malloc(sizeof(char) * line_length);
+        buffer->buf[buffer->nextin] = (char *)malloc(sizeof(char) * (line_length+1));
         strcpy(buffer->buf[buffer->nextin], line);
         buffer->nextin++;
         buffer->nextin %= BSIZE;
