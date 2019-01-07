@@ -4,13 +4,14 @@
 #include "readdir_search.h"
 #include "nftw_search.h"
 
+char sign;
 int year;
 int month;
 int day;
-char sign;
 
 void validate_args(int argc, char *argv[]);
 void search(char *path, int mode);
+void init_input_data_struct(input_data *data, char *path);
 
 int main(int argc, char *argv[])
 {
@@ -45,7 +46,20 @@ void search(char *path, int mode)
 {
     printf("Access%*sName%*sSize%*sModification date%*sAbsolute path\n", 6, "", 25, "", 5, "", 5, "");
     if (mode)
-        readdir_search(path);
+    {
+        input_data data;
+        init_input_data_struct(&data, path);
+        readdir_search(&data);
+    }
     else
         nftw_search(path);
+}
+
+void init_input_data_struct(input_data *data, char *path)
+{
+    data->year = year;
+    data->month = month;
+    data->day = day;
+    data->sign = sign;
+    data->path = path;
 }

@@ -20,7 +20,8 @@ bin/utils.o: src/utils.c \
 	$(OBJECT)
 
 bin/readdir_search.o: src/readdir_search.c \
-				include/readdir_search.h | bin
+				include/readdir_search.h \
+				include/utils.h | bin
 	$(OBJECT)
 
 bin/nftw_search.o: src/nftw_search.c \
