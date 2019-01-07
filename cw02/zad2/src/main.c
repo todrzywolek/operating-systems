@@ -8,6 +8,7 @@ char sign;
 int year;
 int month;
 int day;
+input_data data;
 
 void validate_args(int argc, char *argv[]);
 void search(char *path, int mode);
@@ -45,10 +46,9 @@ void validate_args(int argc, char *argv[])
 void search(char *path, int mode)
 {
     printf("Access%*sName%*sSize%*sModification date%*sAbsolute path\n", 6, "", 25, "", 5, "", 5, "");
+    init_input_data_struct(&data, path);
     if (mode)
     {
-        input_data data;
-        init_input_data_struct(&data, path);
         readdir_search(&data);
     }
     else
