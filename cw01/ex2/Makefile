@@ -3,6 +3,9 @@ CC = gcc
 CC_OPT = $(OPT)
 OBJECT=$(CC) $< -c $(CFLAGS) $(CC_OPT) -o $@
 
+all:
+	sh start.sh
+
 
 main_a: bin/main.o lib/libmatrix.a bin/time_counter.o
 	$(CC) $^ -L ./lib -I include $(CC_OPT) -o $@
