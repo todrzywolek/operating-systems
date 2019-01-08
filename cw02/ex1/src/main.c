@@ -18,6 +18,7 @@ int main(int argc, char const *argv[])
 
 void validate_operation_and_argument_number(int number_of_arguments, char const *operation)
 {
+    printf("Args:%d", number_of_arguments);
     if (number_of_arguments < 5)
     {
         printf("Invalid number of arguments\n");
@@ -28,10 +29,14 @@ void validate_operation_and_argument_number(int number_of_arguments, char const 
         printf("Invalid number of arguments for generate operation\n");
         exit(-1);
     }
-    else if ((strcmp(operation, "sort") == 0 || strcmp(operation, "copy") == 0) &&
-             number_of_arguments != 6)
+    else if (strcmp(operation, "sort") == 0 && number_of_arguments != 6)
     {
-        printf("Invalid number of arguments for sort or copy operation\n");
+        printf("Invalid number of arguments for sort operation\n");
+        exit(-1);
+    }
+    else if (strcmp(operation, "copy") == 0 && number_of_arguments != 7)
+    {
+        printf("Invalid number of arguments for copy operation\n");
         exit(-1);
     }
 }

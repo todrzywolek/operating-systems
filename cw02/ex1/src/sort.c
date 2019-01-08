@@ -6,11 +6,14 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <string.h>
+#include "time_counter.h"
 
 void sort(char const *argv[])
 {
     int num_of_records = convert_to_int(argv[3]);
     int record_size = convert_to_int(argv[4]);
+    struct tms tmsstart, tmsend;
+    clock_t start, end;
 
     if (!strcmp(argv[5], "sys"))
     {
@@ -20,7 +23,10 @@ void sort(char const *argv[])
             printf("Failed opening the file!");
             exit(-1);
         }
+        start = save_timestamp(&tmsstart);
         sys_sort(f_desc, num_of_records, record_size);
+        end = save_timestamp(&tmsend);
+        display_times(end - start, &tmsstart, &tmsend);
         close(f_desc);
     }
     else if (!strcmp(argv[5], "lib"))
@@ -31,7 +37,10 @@ void sort(char const *argv[])
             printf("Failed opening the file!");
             exit(-1);
         }
+        start = save_timestamp(&tmsstart);
         lib_sort(fp, num_of_records, record_size);
+        end = save_timestamp(&tmsend);
+        display_times(end - start, &tmsstart, &tmsend);
         fclose(fp);
     }
 }
