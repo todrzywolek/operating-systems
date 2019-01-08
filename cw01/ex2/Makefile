@@ -8,8 +8,6 @@ main_a: bin/main.o lib/libmatrix.a bin/time_counter.o
 	$(CC) $^ -L ./lib -I include $(CC_OPT) -o $@
 
 main_so: bin/main.o lib/libmatrix.so bin/time_counter.o
-	LD_LIBRARY_PATH=/home/Projects/studia/operating-systems/cw01/ex2/lib
-	export LD_LIBRARY_PATH
 	$(CC) $(CFLAGS) $(CC_OPT) $^ -o $@
 
 dll_main: bin/dll_main.o lib/libmatrix.so bin/time_counter.o

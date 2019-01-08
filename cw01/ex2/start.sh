@@ -1,7 +1,9 @@
 #!/bin/bash
 
-MATRIX_COLS=60000
+MATRIX_COLS=70000
 MATRIX_ROWS=10000
+
+rm -rf results.txt
 
 echo Running Matrix add program >> results.txt
 
@@ -38,6 +40,11 @@ echo ---------------------------------------------------------------------------
 # Shared lib
 echo Shared library linking >> results.txt
 echo
+lib=$(pwd)
+lib="$lib/lib"
+LD_LIBRARY_PATH=$lib
+export LD_LIBRARY_PATH
+echo $LD_LIBRARY_PATH
 echo No compiler optimization
 make clean
 echo NO OPTIMIZATION >> results.txt
