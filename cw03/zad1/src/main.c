@@ -10,7 +10,7 @@ int day;
 input_data data;
 
 void validate_args(int argc, char *argv[]);
-void search(char *path, int mode);
+void search(char *path);
 void init_input_data_struct(input_data *data, char *path);
 
 int main(int argc, char *argv[])
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     month = atoi(argv[4]);
     day = atoi(argv[5]);
 
-    search(argv[1], mode);
+    search(argv[1]);
     return 0;
 }
 
@@ -41,7 +41,7 @@ void validate_args(int argc, char *argv[])
     }
 }
 
-void search(char *path, int mode)
+void search(char *path)
 {
     printf("Access%*sName%*sSize%*sModification date%*sAbsolute path\n", 6, "", 25, "", 5, "", 5, "");
     init_input_data_struct(&data, path);

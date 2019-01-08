@@ -4,6 +4,8 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <time.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include "utils.h"
 #include "readdir_search.h"
 
@@ -26,7 +28,7 @@ void readdir_search(input_data *data)
         }
         if (S_ISDIR(buf.st_mode))
         {
-            if (!vfork())
+            if (!fork())
             {
                 search_nested_dir(data, fpath);
             }
