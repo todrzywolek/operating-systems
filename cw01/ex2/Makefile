@@ -1,22 +1,35 @@
-CFLAGS = -Wall
+CFLAGS = -Wall -I include
 CC = gcc
-OBJECT=$(CC) $< -c -I include -o $@
+OBJECT=$(CC) $< -c $(CFLAGS) -o $@
 
-main: bin/main.o libackermann_static
-	$(CC) bin/main lib/libackermann.a -I include -o $@
+main_a: bin/main.o lib/libmatrix.a bin/time_counter.o
+	$(CC) $^ -L ./lib -I include -o $@
+
+main_so: bin/main.o lib/libmatrix.so bin/time_counter.o
+	LD_LIBRARY_PATH=/home/Projects/studia/operating-systems/cw01/ex2
+	export LD_LIBRARY_PATH
+	$(CC) $(CFLAGS) $^ -o $@
 
 bin/main.o: \
 		src/main.c \
-		include/ackermann.h | bin
+		include/matrix.h \
+		include/time_counter.h | bin
 	$(OBJECT)
 
-.PHONY: libackermann_static
-libackermann_static: bin/ackermann.o
-	ar rcs lib/libackermann.a ackermann.o | lib
+lib/libmatrix.a: bin/matrix.o | lib
+	ar -rcs $@ $^
 
-bin/ackermann.o: \
-		src/ackermann.c \
-		include/ackermann.h | bin
+lib/libmatrix.so: bin/matrix.o | lib
+	$(CC) -fPIC $(CFLAGS) $^ -shared -o $@
+
+bin/matrix.o: \
+		src/matrix.c \
+		include/matrix.h | bin
+	$(CC) $< -fPIC -c $(CFLAGS) -o $@
+
+bin/time_counter.o: \
+		src/time_counter.c \
+		include/time_counter.h | bin
 	$(OBJECT)
 
 bin:
@@ -27,5 +40,5 @@ lib:
 
 .PHONY: clean
 clean:
-	rm -rf bin/
+	rm -rf bin/ lib/ main_a main_so
 
