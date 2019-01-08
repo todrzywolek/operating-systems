@@ -59,13 +59,13 @@ FILE7=dane7.dat
 FILE8=dane8.dat
 
 SIZE1=10000 4
-SIZE2=500 512
-SIZE3=15 4096
-SIZE4=10 8192
+SIZE2=10000 512
+SIZE3=5500 4096
+SIZE4=5000 8192
 SIZE5=20000 4
-SIZE6=800 512
-SIZE7=20 4096
-SIZE8=20 8192
+SIZE6=6000 512
+SIZE7=7000 4096
+SIZE8=7000 8192
 
 M1=sys
 M2=lib
@@ -146,4 +146,4 @@ wyniki.txt: main
 
 .PHONY: clean
 clean:
-	rm -rf bin/ *.dat
+	rm -rf bin/ *.dat *.sys *.lib wyniki.txt

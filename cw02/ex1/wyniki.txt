@@ -1,0 +1,287 @@
+Test 1 - copy sys
+Rozmiar: 10000 4
+running copy
+  real:     0.01
+  user:     0.00
+  sys:      0.00
+  child user:     0.00
+  child sys:      0.00
+
+Test 2 - copy sys
+Rozmiar: 10000 512
+running copy
+  real:     0.02
+  user:     0.00
+  sys:      0.01
+  child user:     0.00
+  child sys:      0.00
+
+Test 3 - copy sys
+Rozmiar: 5500 4096
+running copy
+  real:     0.01
+  user:     0.00
+  sys:      0.01
+  child user:     0.00
+  child sys:      0.00
+
+Test 4 - copy sys
+Rozmiar: 5000 8192
+running copy
+  real:     0.03
+  user:     0.00
+  sys:      0.01
+  child user:     0.00
+  child sys:      0.00
+
+Test 5 - copy lib
+Rozmiar: 10000 4
+running copy
+  real:     0.00
+  user:     0.00
+  sys:      0.00
+  child user:     0.00
+  child sys:      0.00
+
+Test 6 - copy lib
+Rozmiar: 10000 512
+running copy
+  real:     0.01
+  user:     0.00
+  sys:      0.00
+  child user:     0.00
+  child sys:      0.00
+
+Test 7 - copy lib
+Rozmiar: 5500 4096
+running copy
+  real:     0.01
+  user:     0.00
+  sys:      0.01
+  child user:     0.00
+  child sys:      0.00
+
+Test 8 - copy lib
+Rozmiar: 5000 8192
+running copy
+  real:     0.02
+  user:     0.00
+  sys:      0.02
+  child user:     0.00
+  child sys:      0.00
+
+Test 9 - copy sys
+Rozmiar: 20000 4
+running copy
+  real:     0.03
+  user:     0.00
+  sys:      0.02
+  child user:     0.00
+  child sys:      0.00
+
+Test 10 - copy sys
+Rozmiar: 6000 512
+running copy
+  real:     0.01
+  user:     0.00
+  sys:      0.00
+  child user:     0.00
+  child sys:      0.00
+
+Test 11 - copy sys
+Rozmiar: 7000 4096
+running copy
+  real:     0.02
+  user:     0.00
+  sys:      0.01
+  child user:     0.00
+  child sys:      0.00
+
+Test 12 - copy sys
+Rozmiar: 7000 8192
+running copy
+  real:     0.04
+  user:     0.00
+  sys:      0.03
+  child user:     0.00
+  child sys:      0.00
+
+Test 13 - copy lib
+Rozmiar: 20000 4
+running copy
+  real:     0.00
+  user:     0.00
+  sys:      0.00
+  child user:     0.00
+  child sys:      0.00
+
+Test 14 - copy lib
+Rozmiar: 6000 512
+running copy
+  real:     0.00
+  user:     0.00
+  sys:      0.00
+  child user:     0.00
+  child sys:      0.00
+
+Test 15 - copy lib
+Rozmiar: 7000 4096
+running copy
+  real:     0.02
+  user:     0.00
+  sys:      0.01
+  child user:     0.00
+  child sys:      0.00
+
+Test 16 - copy lib
+Rozmiar: 7000 8192
+running copy
+  real:     0.04
+  user:     0.00
+  sys:      0.03
+  child user:     0.00
+  child sys:      0.00
+
+Test 17 - sort sys
+Rozmiar: 10000 4
+running sort
+  real:    28.25
+  user:     7.55
+  sys:     20.69
+  child user:     0.00
+  child sys:      0.00
+
+Test 18 - sort sys
+Rozmiar: 10000 512
+running sort
+  real:    29.68
+  user:     7.61
+  sys:     22.06
+  child user:     0.00
+  child sys:      0.00
+
+Test 19 - sort sys
+Rozmiar: 5500 4096
+running sort
+  real:     9.59
+  user:     2.39
+  sys:      7.20
+  child user:     0.00
+  child sys:      0.00
+
+Test 20 - sort sys
+Rozmiar: 5000 8192
+running sort
+  real:     8.08
+  user:     1.89
+  sys:      6.18
+  child user:     0.00
+  child sys:      0.00
+
+Test 21 - sort lib
+Rozmiar: 10000 4
+running sort
+  real:    12.04
+  user:     4.89
+  sys:      7.12
+  child user:     0.00
+  child sys:      0.00
+
+Test 22 - sort lib
+Rozmiar: 10000 512
+running sort
+  real:    15.42
+  user:     6.08
+  sys:      9.33
+  child user:     0.00
+  child sys:      0.00
+
+Test 23 - sort lib
+Rozmiar: 5500 4096
+running sort
+  real:    12.68
+  user:     3.04
+  sys:      9.64
+  child user:     0.00
+  child sys:      0.00
+
+Test 24 - sort lib
+Rozmiar: 5000 8192
+running sort
+  real:    10.74
+  user:     2.44
+  sys:      8.30
+  child user:     0.00
+  child sys:      0.00
+
+Test 25 - sort sys
+Rozmiar: 20000 4
+running sort
+  real:   112.88
+  user:    30.75
+  sys:     82.08
+  child user:     0.00
+  child sys:      0.00
+
+Test 26 - sort sys
+Rozmiar: 6000 512
+running sort
+  real:    10.47
+  user:     2.69
+  sys:      7.77
+  child user:     0.00
+  child sys:      0.00
+
+Test 27 - sort sys
+Rozmiar: 7000 4096
+running sort
+  real:    15.71
+  user:     3.82
+  sys:     11.85
+  child user:     0.00
+  child sys:      0.00
+
+Test 28 - sort sys
+Rozmiar: 7000 8192
+running sort
+  real:    15.93
+  user:     3.67
+  sys:     12.26
+  child user:     0.00
+  child sys:      0.00
+
+Test 29 - sort lib
+Rozmiar: 20000 4
+running sort
+  real:    47.47
+  user:    20.18
+  sys:     27.28
+  child user:     0.00
+  child sys:      0.00
+
+Test 30 - sort lib
+Rozmiar: 6000 512
+running sort
+  real:     5.47
+  user:     2.12
+  sys:      3.35
+  child user:     0.00
+  child sys:      0.00
+
+Test 31 - sort lib
+Rozmiar: 7000 4096
+running sort
+  real:    20.71
+  user:     4.81
+  sys:     15.90
+  child user:     0.00
+  child sys:      0.00
+
+Test 32 - sort lib
+Rozmiar: 7000 8192
+running sort
+  real:    21.16
+  user:     4.94
+  sys:     16.21
+  child user:     0.00
+  child sys:      0.00
