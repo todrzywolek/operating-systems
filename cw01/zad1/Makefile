@@ -57,4 +57,4 @@ bin:
 
 .PHONY: clean
 clean:
-	rm -rf bin/
+	rm -rf bin/ rand_file.txt file.txt results.txt main
