@@ -34,14 +34,14 @@ bin:
 	mkdir bin
 
 # tests
-FILE1=1.tt
-FILE2=2.tt
-FILE3=3.tt
-FILE4=4.tt
-FILE5=5.tt
-FILE6=6.tt
-FILE7=7.tt
-FILE8=8.tt
+FILE1=dane1.dat
+FILE2=dane2.dat
+FILE3=dane3.dat
+FILE4=dane4.dat
+FILE5=dane5.dat
+FILE6=dane6.dat
+FILE7=dane7.dat
+FILE8=dane8.dat
 
 SIZE1=4 10000
 SIZE2=512 500
@@ -51,6 +51,9 @@ SIZE5=4 20000
 SIZE6=512 800
 SIZE7=4096 20
 SIZE8=8192 20
+
+M1=sys
+M2=lib
 
 wyniki.txt: main
 	./$^ generate $(FILE1) $(SIZE1)
@@ -64,4 +67,4 @@ wyniki.txt: main
 
 .PHONY: clean
 clean:
-	rm -rf bin/ *.tt
+	rm -rf bin/ *.dat
