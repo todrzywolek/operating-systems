@@ -18,7 +18,6 @@ int main(int argc, char const *argv[])
 
 void validate_operation_and_argument_number(int number_of_arguments, char const *operation)
 {
-    printf("Args:%d", number_of_arguments);
     if (number_of_arguments < 5)
     {
         printf("Invalid number of arguments\n");
