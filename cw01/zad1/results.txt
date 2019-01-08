@@ -1,50 +1,104 @@
-Ackermann results
+Running prog 1 - Ackermann and saving result is file
 NO OPTIMIZATION
-  real:    24.94
-  user:    24.93
+  real:    24.85
+  user:    24.79
   sys:      0.00
   child user:     0.00
   child sys:      0.00
 O1 OPTIMIZATION
-  real:    11.95
-  user:    11.94
+  real:    11.87
+  user:    11.86
   sys:      0.00
   child user:     0.00
   child sys:      0.00
-nO2 OPTIMIZATION
-  real:     9.53
-  user:     9.53
+O2 OPTIMIZATION
+  real:     9.46
+  user:     9.46
   sys:      0.00
   child user:     0.00
   child sys:      0.00
-nO3 OPTIMIZATION
-  real:     7.24
-  user:     7.22
+O3 OPTIMIZATION
+  real:     7.21
+  user:     7.20
   sys:      0.00
   child user:     0.00
   child sys:      0.00
-nnFile read/write results
-nNO OPTIMIZATION
-  real:    48.16
-  user:     0.90
-  sys:     13.47
-  child user:     0.00
-  child sys:      0.00
-nO1 OPTIMIZATION
-  real:    50.84
+-------------------------------------------
+Running prog 2 - File read/write and saving result is file
+NO OPTIMIZATION
+  real:    44.14
   user:     0.88
-  sys:     13.69
+  sys:     12.50
   child user:     0.00
   child sys:      0.00
-nO2 OPTIMIZATION
-  real:    51.78
-  user:     0.81
-  sys:     14.00
+O1 OPTIMIZATION
+  real:    44.55
+  user:     0.86
+  sys:     12.40
   child user:     0.00
   child sys:      0.00
-nO3 OPTIMIZATION
-  real:    50.68
-  user:     0.88
-  sys:     13.62
+O2 OPTIMIZATION
+  real:    43.14
+  user:     0.85
+  sys:     12.22
   child user:     0.00
   child sys:      0.00
+O3 OPTIMIZATION
+  real:    44.00
+  user:     0.68
+  sys:     12.36
+  child user:     0.00
+  child sys:      0.00
+-------------------------------------------
+Running prog 3 - Matrix add and saving result is file
+NO OPTIMIZATION
+  real:    13.91
+  user:    11.75
+  sys:      2.15
+  child user:     0.00
+  child sys:      0.00
+O1 OPTIMIZATION
+  real:    11.38
+  user:     9.01
+  sys:      2.35
+  child user:     0.00
+  child sys:      0.00
+O2 OPTIMIZATION
+  real:    10.64
+  user:     8.47
+  sys:      2.14
+  child user:     0.00
+  child sys:      0.00
+O3 OPTIMIZATION
+  real:    10.64
+  user:     8.19
+  sys:      2.44
+  child user:     0.00
+  child sys:      0.00
+-------------------------------------------
+Running prog 4 - Array copy and saving result is file
+NO OPTIMIZATION
+  real:    77.48
+  user:    77.47
+  sys:      0.00
+  child user:     0.00
+  child sys:      0.00
+O1 OPTIMIZATION
+  real:    65.97
+  user:    65.97
+  sys:      0.00
+  child user:     0.00
+  child sys:      0.00
+O2 OPTIMIZATION
+  real:    66.50
+  user:    66.49
+  sys:      0.00
+  child user:     0.00
+  child sys:      0.00
+O3 OPTIMIZATION
+  real:    64.20
+  user:    64.19
+  sys:      0.00
+  child user:     0.00
+  child sys:      0.00
+-------------------------------------------
