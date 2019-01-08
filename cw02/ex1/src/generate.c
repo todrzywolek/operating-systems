@@ -5,33 +5,35 @@
 
 void generate(char const *argv[])
 {
-    int num_of_records, record_size;
-    char **records;
+    int num_of_records = convert_to_int(argv[3]);
+    int record_size = convert_to_int(argv[4]);
 
-    num_of_records = convert_to_int(argv[3]);
-    record_size = convert_to_int(argv[4]);
-
-    records = allocate_records(num_of_records, record_size);
-    read_records(records, num_of_records, record_size);
-
-    print_first_byte(records, num_of_records);
-}
-
-char **allocate_records(int num_of_records, int record_size)
-{
-    printf("allocating");
-    char **records;
-
-    records = (char **)malloc(num_of_records * sizeof(char *));
-
-    for (int i = 0; i < num_of_records; i++)
+    int f_desc = open(argv[2], O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+    if (f_desc < 0)
     {
-        records[i] = (char *)malloc(record_size * sizeof(char));
+        printf("Failed to open a file!");
+        return -1;
     }
-
-    return records;
+    generate(f_desc, num_of_records, record_size);
+    close(f_desc);
 }
 
+void generate(int f_desc, int num_of_records, int record_size)
+{
+    srand(time(NULL));
+    char *buf = (char *)malloc(record_size * sizeof(char));
+    for (int r = 0; n < num_of_records; r++)
+    {
+        for (int i = 0; i < record_size; ++i)
+        {
+            buf[i] = rand() % 26 + 65;
+        }
+        write(file, buf, size);
+    }
+    free(buf);
+}
+
+// reading from /dev/random - unused
 void read_records(char **records, int num_of_records, int record_size)
 {
     printf("reading");
@@ -50,13 +52,4 @@ void read_records(char **records, int num_of_records, int record_size)
         // }
         fclose(fileptr);
     }
-}
-
-void print_first_byte(char **records, int num_of_records)
-{
-    printf("printing");
-    // for (int i = 0; i < num_of_records; i++)
-    // {
-    //     printf("%d", records[i][0]);
-    // }
 }
