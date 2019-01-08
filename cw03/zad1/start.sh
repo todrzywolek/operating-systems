@@ -1,0 +1,9 @@
+#!/bin/bash
+
+DIR_PATH=.
+OPERATION='>'
+YEAR=2018
+MONTH=03
+DAY=11
+
+./main $DIR_PATH $OPERATION $YEAR $MONTH $DAY
