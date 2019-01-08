@@ -6,9 +6,12 @@ main_a: bin/main.o lib/libmatrix.a bin/time_counter.o
 	$(CC) $^ -L ./lib -I include -o $@
 
 main_so: bin/main.o lib/libmatrix.so bin/time_counter.o
-	LD_LIBRARY_PATH=/home/Projects/studia/operating-systems/cw01/ex2
+	LD_LIBRARY_PATH=/home/Projects/studia/operating-systems/cw01/ex2/lib
 	export LD_LIBRARY_PATH
 	$(CC) $(CFLAGS) $^ -o $@
+
+dll_main: bin/dll_main.o lib/libmatrix.so bin/time_counter.o
+	$(CC) $(CFLAGS) -o $@ bin/dll_main.o bin/time_counter.o -rdynamic -ldl
 
 bin/main.o: \
 		src/main.c \
@@ -16,11 +19,16 @@ bin/main.o: \
 		include/time_counter.h | bin
 	$(OBJECT)
 
+bin/dll_main.o: \
+		src/dll_main.c \
+		include/time_counter.h | bin
+	$(OBJECT)
+
 lib/libmatrix.a: bin/matrix.o | lib
 	ar -rcs $@ $^
 
 lib/libmatrix.so: bin/matrix.o | lib
-	$(CC) -fPIC $(CFLAGS) $^ -shared -o $@
+	$(CC) $(CFLAGS) $^ -shared -o $@
 
 bin/matrix.o: \
 		src/matrix.c \
@@ -40,5 +48,5 @@ lib:
 
 .PHONY: clean
 clean:
-	rm -rf bin/ lib/ main_a main_so
+	rm -rf bin/ lib/ main_a main_so dll_main
 
