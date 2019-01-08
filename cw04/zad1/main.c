@@ -7,8 +7,9 @@
 
 void func_stop();
 void func_term();
+void print_time();
 
-bool work = true;
+    int work = 1;
 
 int main(int argc, char *argv[])
 {
@@ -19,7 +20,7 @@ int main(int argc, char *argv[])
 
     sigaction(SIGINT, &act, NULL);
     signal(SIGTSTP, func_stop);
-    
+
     while (1)
     {
         if (work)
@@ -34,10 +35,10 @@ void func_stop()
     {
         printf("Wywolano SIGTSTP!\n");
         printf("Oczekuje na CTRL+Z - kontynuacja albo CTR+C - zakonczenie programu\n");
-        work = false;
+        work = 0;
     }
     else
-        work = true;
+        work = 1;
 }
 
 void func_term()

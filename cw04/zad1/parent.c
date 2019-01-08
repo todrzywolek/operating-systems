@@ -8,7 +8,7 @@
 void func_term();
 void func_stop();
 
-bool child_working = false;
+int child_working = 0;
 int child_pid;
 
 int main(int argc, char *argv[])
@@ -37,13 +37,13 @@ void func_stop()
     if (child_working)
     {
         kill(child_pid, SIGINT);
-        child_working = false;
+        child_working = 0;
     }
     else
     {
         if ((child_pid = fork()))
         {
-            child_working = true;
+            child_working = 1;
         }
         else
         {
