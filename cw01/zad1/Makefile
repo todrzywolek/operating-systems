@@ -4,6 +4,9 @@ CC = gcc
 CC_OPT = $(OPT)
 OBJECT=$(CC) $< -c -I include $(CC_OPT) -o $@
 
+all:
+	sh start.sh
+
 ackermann: bin/main_ackermann.o \
 	 		bin/ackermann.o \
 			bin/time_counter.o
@@ -57,4 +60,4 @@ bin:
 
 .PHONY: clean
 clean:
-	rm -rf bin/ rand_file.txt file.txt results.txt main
+	rm -rf bin/ rand_file.txt file.txt main
