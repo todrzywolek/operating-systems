@@ -6,12 +6,14 @@ OBJECT=$(CC) $< -c -I include -o $@
 main: bin/main.o \
 		bin/generate.o \
 		bin/utils.o \
-		bin/sort.o
+		bin/sort.o \
+		bin/my_copy.o
 	$(CC) $^ -o $@
 
 bin/main.o: src/main.c \
 			include/generate.h \
-			include/sort.h | bin
+			include/sort.h \
+			include/my_copy.h | bin
 	$(OBJECT)
 
 bin/generate.o: src/generate.c \
@@ -26,6 +28,12 @@ bin/utils.o: src/utils.c \
 
 bin/sort.o: src/sort.c \
 			 include/sort.h \
+			 bin/utils.o \
+			 include/utils.h | bin
+	$(OBJECT)
+
+bin/my_copy.o: src/my_copy.c \
+			 include/my_copy.h \
 			 bin/utils.o \
 			 include/utils.h | bin
 	$(OBJECT)

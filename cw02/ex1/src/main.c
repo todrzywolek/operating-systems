@@ -3,6 +3,7 @@
 #include <string.h>
 #include "generate.h"
 #include "sort.h"
+#include "my_copy.h"
 
 void validate_operation_and_argument_number(int number_of_arguments, char const *operation);
 void run_operation(char const *argv[]);
@@ -51,6 +52,7 @@ void run_operation(char const *argv[])
     else if (strcmp(operation, "copy") == 0)
     {
         printf("running copy\n");
+        run_copy(argv);
     }
     else
     {
