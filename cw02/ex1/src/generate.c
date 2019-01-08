@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <time.h>
 #include "utils.h"
 #include "generate.h"
 
@@ -12,23 +16,23 @@ void generate(char const *argv[])
     if (f_desc < 0)
     {
         printf("Failed to open a file!");
-        return -1;
+        return;
     }
-    generate(f_desc, num_of_records, record_size);
+    generate_bytes(f_desc, num_of_records, record_size);
     close(f_desc);
 }
 
-void generate(int f_desc, int num_of_records, int record_size)
+void generate_bytes(int f_desc, int num_of_records, int record_size)
 {
     srand(time(NULL));
     char *buf = (char *)malloc(record_size * sizeof(char));
-    for (int r = 0; n < num_of_records; r++)
+    for (int r = 0; r < num_of_records; r++)
     {
         for (int i = 0; i < record_size; ++i)
         {
             buf[i] = rand() % 26 + 65;
         }
-        write(file, buf, size);
+        write(f_desc, buf, record_size);
     }
     free(buf);
 }
