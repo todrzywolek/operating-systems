@@ -3,6 +3,9 @@ CC = gcc
 
 OBJECT=$(CC) $< $(CFLAGS) -o $@
 
+all: main
+	sh start.sh
+
 main: bin/main.o \
 		bin/utils.o \
 		bin/readdir_search.o \
@@ -42,4 +45,4 @@ bin:
 
 .PHONY: clean
 clean:
-	rm -rf bin/
+	rm -rf bin/ main

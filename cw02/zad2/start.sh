@@ -1,7 +1,5 @@
 #!/bin/bash
 
-make
-
 DIR_PATH=.
 OPERATION='>'
 YEAR=2018
