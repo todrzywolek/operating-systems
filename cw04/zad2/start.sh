@@ -1,7 +1,6 @@
 #!/bin/bash
 
 make
-make clean
 
 # L - num of signals parent should send to child
 L=4

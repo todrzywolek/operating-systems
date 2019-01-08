@@ -19,7 +19,7 @@ int main()
 {
     struct sigaction act;
 
-    set_signal_handlers(act);
+    set_signal_handlers(&act);
     while (true)
         pause();
 }

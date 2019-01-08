@@ -26,6 +26,7 @@ void run_child_process();
 void send_async_signals_to_child();
 void send_sync_signals_to_child();
 void send_real_time_signals_to_child();
+int isNumber(char *string);
 
 int L;
 int L2 = 0;
@@ -77,13 +78,13 @@ void set_signals(struct sigaction *act)
     switch (Type)
     {
     case 1:
-        setup_v1_signals(&act);
+        setup_v1_signals(act);
         break;
     case 2:
-        setup_v2_signals(&act);
+        setup_v2_signals(act);
         break;
     case 3:
-        setup_v3_signals(&act);
+        setup_v3_signals(act);
         break;
     }
     act->sa_flags = 0;
@@ -191,4 +192,15 @@ void send_real_time_signals_to_child()
     }
     PRINT_M2();
     kill(pid, USER_SIG2);
+}
+
+int isNumber(char *string)
+{
+    int n;
+    int value;
+    char c;
+    n = sscanf(string, "%d%c", &value, &c);
+    if (n != 1)
+        return 0;
+    return 1;
 }
