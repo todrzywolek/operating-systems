@@ -17,6 +17,7 @@
 **/*iml
 **/.idea
 **/bin
+**/lib
 
 main
 

@@ -1,17 +1,19 @@
 CFLAGS = -Wall -I include
 CC = gcc
-OBJECT=$(CC) $< -c $(CFLAGS) -o $@
+CC_OPT = $(OPT)
+OBJECT=$(CC) $< -c $(CFLAGS) $(CC_OPT) -o $@
+
 
 main_a: bin/main.o lib/libmatrix.a bin/time_counter.o
-	$(CC) $^ -L ./lib -I include -o $@
+	$(CC) $^ -L ./lib -I include $(CC_OPT) -o $@
 
 main_so: bin/main.o lib/libmatrix.so bin/time_counter.o
 	LD_LIBRARY_PATH=/home/Projects/studia/operating-systems/cw01/ex2/lib
 	export LD_LIBRARY_PATH
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $(CC_OPT) $^ -o $@
 
 dll_main: bin/dll_main.o lib/libmatrix.so bin/time_counter.o
-	$(CC) $(CFLAGS) -o $@ bin/dll_main.o bin/time_counter.o -rdynamic -ldl
+	$(CC) $(CFLAGS) $(CC_OPT) -o $@ bin/dll_main.o bin/time_counter.o -rdynamic -ldl
 
 bin/main.o: \
 		src/main.c \
@@ -33,7 +35,7 @@ lib/libmatrix.so: bin/matrix.o | lib
 bin/matrix.o: \
 		src/matrix.c \
 		include/matrix.h | bin
-	$(CC) $< -fPIC -c $(CFLAGS) -o $@
+	$(CC) $< -fPIC -c $(CFLAGS) $(CC_OPT) -o $@
 
 bin/time_counter.o: \
 		src/time_counter.c \
