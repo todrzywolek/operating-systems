@@ -38,4 +38,4 @@ bin:
 
 .PHONY: clean
 clean:
-	rm -rf bin/
+	rm -rf bin/ main

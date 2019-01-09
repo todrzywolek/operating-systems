@@ -2,7 +2,7 @@
 #include <string.h>
 #include <assert.h>
 #include <ctype.h>
-//#include <pthread.h>
+#include <pthread.h>
 #include "producer.h"
 
 void *producer_start(void *parameters)
@@ -102,7 +102,7 @@ void save_in_buffer(struct buffer_t *buffer, char *line, int line_num, int loggi
     sem_wait(&buffer->pmut);
 
     // strip newline from the end
-    line[strcspn(line, "\n")] = 0;
+    //line[strcspn(line, "\n")] = 0;
     int line_length = strlen(line);
 
     // save in buffer

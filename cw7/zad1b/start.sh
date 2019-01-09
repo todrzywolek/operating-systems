@@ -2,7 +2,7 @@
 
 make
 
-PRODUCERS_NUM=8
+PRODUCERS_NUM=1
 CONSUMERS_NUM=8
 BUFFER_SIZE=100
 SOURCE_FILE=arguments.txt
@@ -15,13 +15,13 @@ REFERENCE_LENGTH=2
 #       1 - print source file lines greater than reference length
 #       2 - print source file lines equal reference length
 #       3 - print source file lines lower than reference length
-COMPARE_MODE=1
+COMPARE_MODE=2
 
 # setup program logging level
 #   allowed values:
 #       1 - info logging level - prints lines that match compare mode
 #       2 - debug logging level - prints status and reports work for all program threads
-LOGGING_LEVEL=1
+LOGGING_LEVEL=2
 
 # program finish condition
 #   allowed values:

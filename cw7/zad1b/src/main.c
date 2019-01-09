@@ -115,9 +115,9 @@ void handle_signal(int signo)
 
 void set_quit_flag()
 {
-    pthread_mutex_lock(&producer_parameters.pparams_mutex);
+    sem_wait(&producer_parameters.pparams_mutex);
     producer_parameters.stop = 1;
-    pthread_mutex_unlock(&producer_parameters.pparams_mutex);
+    sem_post(&producer_parameters.pparams_mutex);
 }
 
 void join_threads(pthread_t *threads, int size)
