@@ -3,12 +3,19 @@ CC = gcc
 
 OBJECT=$(CC) $< $(CFLAGS) -o $@
 
-all: server
+all: server client
 
 server: bin/server.o bin/queue_utils.o
 	$(CC) $^ -o $@
 
 bin/server.o: src/server.c \
+			include/queue_utils.h | bin
+	$(OBJECT)
+
+client: bin/client.o bin/queue_utils.o
+	$(CC) $^ -o $@
+
+bin/client.o: src/client.c \
 			include/queue_utils.h | bin
 	$(OBJECT)
 
@@ -21,4 +28,4 @@ bin:
 
 .PHONY: clean
 clean:
-	rm -rf bin/ main server
+	rm -rf bin/ main server client
