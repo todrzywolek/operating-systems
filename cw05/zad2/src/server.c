@@ -1,9 +1,12 @@
+#include <mqueue.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <signal.h>
 #include <string.h>
-#include <stdbool.h>
-#include <mqueue.h>
+#include <errno.h>
+#include <signal.h>
 #include "queue_utils.h"
 
 void kill_server();
@@ -17,7 +20,7 @@ int main(int argc, char *argv[])
 {
     signal(SIGINT, kill_server);
     //Store client queues here
-    q = create_queue("server", kill_server);
+    q = create_queue(SERVER_NAME, kill_server);
     printf("Created queue, sq = %d\n", q);
     printf("Awaiting message...\n");
 
