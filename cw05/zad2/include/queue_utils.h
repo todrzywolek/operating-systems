@@ -3,6 +3,8 @@
 #include <stdbool.h>
 
 #define SIZE (100)
+#define SERVER_NAME "/server"
+#define CLIENT_NAME "/client"
 
 void remove_queue(mqd_t queue, char *name, void (*kill_service_func)());
 

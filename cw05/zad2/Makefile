@@ -3,7 +3,7 @@ CC = gcc
 
 OBJECT=$(CC) $< $(CFLAGS) -o $@
 
-all: server
+all: server client
 
 server: bin/server.o bin/queue_utils.o
 	$(CC) $^ -o $@ -lrt
@@ -13,7 +13,7 @@ bin/server.o: src/server.c \
 	$(OBJECT)
 
 client: bin/client.o bin/queue_utils.o
-	$(CC) $^ -o $@
+	$(CC) $^ -o $@ -lrt
 
 bin/client.o: src/client.c \
 			include/queue_utils.h | bin

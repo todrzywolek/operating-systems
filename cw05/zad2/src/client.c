@@ -7,62 +7,63 @@
 #include <unistd.h>
 #include "queue_utils.h"
 
-int cq = 0;
-
 void kill_client();
+
+char name[100];
+mqd_t client_q;
+mqd_t server_q;
 
 int main(int c, char *v[])
 {
     signal(SIGINT, kill_client);
-    if (!check_queue("server", 10))
-    {
-        printf("Server not found!\n");
-        return 1;
-    }
-    int sq = create_queue("server", 10);
-    cq = create_queue("client", getpid());
-    printf("Connected, cq = %d\n", cq);
-    printf("Sending pid...\n");
-    msg m;
-    m.mtype = 1;
-    //Send PID and queue ID
-    sprintf(m.mtext, "%d %d", getpid(), cq);
-    send_message(&sq, &m);
+
+    char name[20];
+    sprintf(name, "%s%d", CLIENT_NAME, getpid());
+    printf("Client name: %s\n", name);
+    client_q = create_queue(name, kill_client);
+    server_q = open_queue(SERVER_NAME, kill_client);
+
+    char a[SIZE];
+    a[0] = 1;
+    sprintf(a + 1, "%d %d", getpid(), client_q);
+    printf("%d %d\n", getpid(), client_q);
+
+    send_message(server_q, a, kill_client);
+
     while (1)
     {
         char command[7];
         printf("Type command: ");
         scanf("%s", command);
-        sprintf(m.mtext, "%d", cq);
         if (strstr(command, "TIME"))
         {
-            m.mtype = 1;
+            a[0] = 2;
+            sprintf(a + 1, "%s", name);
+            printf("Created message: %s\n", a);
         }
-        else if (strstr(command, "END"))
+        else if (strcmp(command, "END") == 0)
         {
-            m.mtype = 2;
-            send_message(&sq, &m);
+            a[0] = 3;
             printf("ok\n");
-            break;
+            send_message(server_q, a, kill_client);
+            kill_client();
         }
         else
             continue;
 
-        if (!check_queue("server", 10))
-        {
-            printf("Connection with server lost. Shutting down.\n");
-            kill_client();
-        }
-        send_message(&sq, &m);
-        read_message(&cq, &m);
-        printf("%s\n", m.mtext);
+        send_message(server_q, a, kill_client);
+        receive_message(client_q, a, kill_client);
+        printf("%s\n", a);
     }
-    remove_queue(&cq);
+    kill_client();
+    return 0;
 }
 
 void kill_client()
 {
     printf("Received signal - client is shutting down.\n");
-    remove_queue(&cq);
+    mq_close(client_q);
+    mq_close(server_q);
+    mq_unlink(name);
     exit(0);
 }

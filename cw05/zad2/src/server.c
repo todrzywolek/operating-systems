@@ -14,8 +14,6 @@ void send_time(FILE *fp, int qid, char *message, char *qname);
 
 mqd_t q;
 
-#define SERVER_NAME "/server"
-
 int main(int argc, char *argv[])
 {
     signal(SIGINT, kill_server);
@@ -24,7 +22,7 @@ int main(int argc, char *argv[])
     printf("Created queue, sq = %d\n", q);
     printf("Awaiting message...\n");
 
-    int qid = 0;
+    int pid, qid = 0;
     char qname[20];
     FILE *fp = NULL;
     bool finish = false;
@@ -47,10 +45,14 @@ int main(int argc, char *argv[])
 
         switch (message[0])
         {
-        case 1: //TIME
+        case 1: //New connection
+            sscanf(message + 1, "%d %d", &pid, &qid);
+            printf("New connection created, pid = %d\n", pid);
+            break;
+        case 2: //TIME
             send_time(fp, qid, message, qname);
             break;
-        case 2: //END
+        case 3: //END
             finish = true;
             break;
         }
@@ -69,7 +71,9 @@ void kill_server()
 
 void send_time(FILE *fp, int qid, char *message, char *qname)
 {
+    printf("In time\n");
     sscanf(message + 1, "%s", qname);
+    printf("Received message: %s", qname);
     fp = popen("date", "r");
     fread(message, sizeof(char), SIZE, fp);
     qid = open_queue(qname, kill_server);
