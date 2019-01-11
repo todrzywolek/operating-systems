@@ -3,17 +3,17 @@ CC = gcc
 
 OBJECT=$(CC) $< $(CFLAGS) -o $@
 
-all: barber
+all: barber client
 
 barber: bin/barber.o \
 		bin/posix_sems.o \
 		bin/queue.o
-	$(CC) $^ -o $@
+	$(CC) $^ -o $@ -lpthread -lrt
 
 client: bin/client.o \
-		bin/sys_v_sems.o \
+		bin/posix_sems.o \
 		bin/queue.o
-	$(CC) $^ -o $@
+	$(CC) $^ -o $@ -lpthread -lrt
 
 bin/barber.o: src/barber.c \
 			include/posix_sems.h \

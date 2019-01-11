@@ -15,7 +15,7 @@ sem_t *create_semaphore(const char *name, unsigned int initVal, void (*error_han
     return s;
 }
 
-sem_t *GetSemaphore(const char *name, void (*error_handler_fn)(int))
+sem_t *get_semaphore(const char *name, void (*error_handler_fn)(int))
 {
     sem_t *s = sem_open(name, O_RDWR);
     if (s == SEM_FAILED)
@@ -87,7 +87,7 @@ void *create_shared_mem(const char *name, off_t size, void (*error_handler_fn)(i
     return ret;
 }
 
-void *GetSharedMem(const char *name, off_t size, void (*error_handler_fn)(int))
+void *get_shared_mem(const char *name, off_t size, void (*error_handler_fn)(int))
 {
     int fd;
     void *ret;
@@ -112,12 +112,12 @@ void release_shared_mem(void *addr, size_t len, const char *name)
     shm_unlink(name);
 }
 
-void CloseSharedMem(void *addr, size_t len)
+void close_shared_mem(void *addr, size_t len)
 {
     munmap(addr, len);
 }
 
-int GetValue(sem_t *sem, void (*error_handler_fn)(int))
+int get_value(sem_t *sem, void (*error_handler_fn)(int))
 {
     int ret;
     if (sem_getvalue(sem, &ret) == -1)

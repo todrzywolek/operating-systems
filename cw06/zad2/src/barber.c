@@ -14,6 +14,9 @@ sem_t *SemT;
 struct Queue *Data;
 size_t seats;
 
+void validate_args(int args);
+void close_barber(int t);
+
 int main(int argc, char *argv[])
 {
     validate_args(argc);

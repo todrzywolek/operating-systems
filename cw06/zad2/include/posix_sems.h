@@ -12,16 +12,16 @@
 #include <sys/shm.h>
 
 sem_t *create_semaphore(const char *name, unsigned int initVal, void (*error_handler_fn)(int));
-sem_t* GetSemaphore(const char* name);
+sem_t *get_semaphore(const char *name, void (*error_handler_fn)(int));
 void take(sem_t *s, void (*error_handler_fn)(int));
 void release(sem_t *s, void (*error_handler_fn)(int));
 void close_semaphore(sem_t *s);
 void remove_semaphore(const char *name);
 void *create_shared_mem(const char *name, off_t size, void (*error_handler_fn)(int));
-void* GetSharedMem(const char* name, off_t len);
+void *get_shared_mem(const char *name, off_t size, void (*error_handler_fn)(int));
 void release_shared_mem(void *addr, size_t len, const char *name);
-void CloseSharedMem(void* addr, size_t len);
-int GetValue(sem_t* sem);
+void close_shared_mem(void* addr, size_t len);
+int get_value(sem_t *sem, void (*error_handler_fn)(int));
 
 
 /*key_t CreateKey(char* name, int num);
