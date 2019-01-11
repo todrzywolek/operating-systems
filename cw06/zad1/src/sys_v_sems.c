@@ -100,7 +100,7 @@ void add(int semid, int n, int val)
     semop(semid, ops, 1);
 }
 
-int IsZero(int semid, int n)
+int is_zero(int semid, int n)
 {
     struct sembuf ops[1];
     ops[0].sem_num = n;
@@ -114,7 +114,7 @@ int IsZero(int semid, int n)
     return 1;
 }
 
-void WaitTillZero(int semid, int n)
+void wait_till_zero(int semid, int n)
 {
     struct sembuf ops[1];
     ops[0].sem_num = n;

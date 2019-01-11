@@ -33,5 +33,5 @@ int create_shared_mem(key_t k, int size, void (*error_handler_fn)(int));
 int get_shared_mem(key_t key, void (*error_handler_fn)(int));
 int *get_mem_pointer(int shmid, void (*error_handler_fn)(int));
 void add(int semid, int n, int val);
-int IsZero(int semid, int n);
-void WaitTillZero(int semid, int n);
+int is_zero(int semid, int n);
+void wait_till_zero(int semid, int n);

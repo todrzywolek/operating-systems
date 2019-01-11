@@ -3,12 +3,24 @@ CC = gcc
 
 OBJECT=$(CC) $< $(CFLAGS) -o $@
 
+all: barber client
+
 barber: bin/barber.o \
 		bin/sys_v_sems.o \
 		bin/queue.o
 	$(CC) $^ -o $@
 
+client: bin/client.o \
+		bin/sys_v_sems.o \
+		bin/queue.o
+	$(CC) $^ -o $@
+
 bin/barber.o: src/barber.c \
+			include/sys_v_sems.h \
+			include/queue.h | bin
+	$(OBJECT)
+
+bin/client.o: src/client.c \
 			include/sys_v_sems.h \
 			include/queue.h | bin
 	$(OBJECT)
@@ -26,4 +38,4 @@ bin:
 
 .PHONY: clean
 clean:
-	rm -rf bin/ barber
+	rm -rf bin/ barber client
