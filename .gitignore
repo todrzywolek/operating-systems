@@ -56,3 +56,5 @@ docker/**/*.css
 docker/**/*.jar
 
 package-lock.json
+
+**/log.txt
